@@ -8,309 +8,344 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root{
-  --bg:#fdf3dc;--ink:#2d140b;--red:#7c130d;--red-dark:#4a0804;--red-bright:#a81c14;
-  --gold:#c89223;--gold-bright:#f5c352;--gold-light:#faecc8;--card:#fffdf8;
+  --bg:#faf5eb;--ink:#2d140b;--red:#7c130d;--red-dark:#4a0804;--red-bright:#a81c14;
+  --gold:#c89223;--gold-bright:#e5b13a;--gold-light:#fff8e7;--card:#ffffff;
   --ok:#0b6e29;--no:#b8140f;--mid:#a86400;
-  --surface:#fffdf7;--border:#d8b568;--hover:rgba(200,146,35,.1);
+  --surface:#ffffff;--border:rgba(200,146,35,0.4);--hover:rgba(200,146,35,.1);
+  --shadow-sm:0 4px 12px rgba(0,0,0,0.05);
+  --shadow-md:0 8px 24px rgba(124,19,13,0.08);
+  --shadow-lg:0 16px 40px rgba(124,19,13,0.15);
   box-sizing:border-box;
 }
 [data-theme="dark"]{
-  --bg:#1a0e08;--ink:#f0e0c8;--red:#e8963c;--red-dark:#7a3f10;--red-bright:#ffb84d;
-  --gold:#d4a645;--gold-bright:#f5c352;--gold-light:#3d2818;--card:#241610;
+  --bg:#120a06;--ink:#f0e0c8;--red:#e8963c;--red-dark:#7a3f10;--red-bright:#ffb84d;
+  --gold:#d4a645;--gold-bright:#f5c352;--gold-light:#241610;--card:#1f1208;
   --ok:#4ade80;--no:#f87171;--mid:#fbbf24;
-  --surface:#241610;--border:#5a3c1c;--hover:rgba(245,195,82,.08);
+  --surface:#1f1208;--border:rgba(212,166,69,0.3);--hover:rgba(245,195,82,.08);
+  --shadow-sm:0 4px 12px rgba(0,0,0,0.3);
+  --shadow-md:0 8px 24px rgba(0,0,0,0.4);
+  --shadow-lg:0 16px 40px rgba(0,0,0,0.6);
 }
 *{box-sizing:border-box}
 body{
-  margin:0;background-color:var(--bg);
+  margin:0;
+  background-color:var(--bg);
   background-image:
-    radial-gradient(circle at 15% 20%, rgba(200,146,35,.13) 0%, transparent 45%),
-    radial-gradient(circle at 85% 80%, rgba(124,19,13,.09) 0%, transparent 45%),
-    repeating-linear-gradient(45deg, rgba(200,146,35,.035) 0px, rgba(200,146,35,.035) 2px, transparent 2px, transparent 12px);
+    radial-gradient(circle at 10% 10%, rgba(200,146,35,.06) 0%, transparent 40%),
+    radial-gradient(circle at 90% 90%, rgba(124,19,13,.05) 0%, transparent 40%);
+  background-attachment: fixed;
   font-family:'Mukta Malar',sans-serif;color:var(--ink);line-height:1.55;
   transition:background-color .3s,color .3s;
 }
 h1,h2,h3,h4{font-family:'Noto Serif Tamil',serif;color:var(--red);margin:.35em 0;letter-spacing:.2px}
 [data-theme="dark"] h1,[data-theme="dark"] h2,[data-theme="dark"] h3,[data-theme="dark"] h4{color:var(--gold-bright)}
 
-.thoranam-bar{height:14px;background:repeating-linear-gradient(90deg,#7c130d 0px,#7c130d 14px,#f5c352 14px,#f5c352 28px,#0b6e29 28px,#0b6e29 42px,#f5c352 42px,#f5c352 56px);border-bottom:2px solid #4a0804}
-
-/* ===== TOP HEADER ===== */
-.top{
-  background:
-    radial-gradient(circle at 50% 0%, rgba(245,195,82,.25), transparent 65%),
-    linear-gradient(135deg,#3e0502 0%,#7c130d 50%,#450603 100%);
-  color:#ffe9b0;text-align:center;padding:24px 16px 22px;
-  border-bottom:6px double var(--gold-bright);position:relative;overflow:hidden;
-  box-shadow:0 6px 24px rgba(74,8,4,.35);
+.thoranam-bar{
+  height:8px;
+  background:repeating-linear-gradient(90deg,#7c130d 0px,#7c130d 15px,#e5b13a 15px,#e5b13a 30px,#0b6e29 30px,#0b6e29 45px,#e5b13a 45px,#e5b13a 60px);
+  border-bottom:1px solid rgba(0,0,0,0.2);
 }
-.top::after{content:"";position:absolute;inset:6px;border:1.5px solid rgba(245,195,82,.35);border-radius:10px;pointer-events:none}
-.top-bar-actions{display:flex;justify-content:space-between;align-items:center;max-width:1080px;margin:0 auto 8px;position:relative;z-index:2;flex-wrap:wrap;gap:8px}
-.top .mantra{display:inline-block;background:rgba(0,0,0,.28);border:1px solid rgba(245,195,82,.55);padding:4px 16px;border-radius:99px;font-size:.86rem;color:#ffe18d;letter-spacing:.6px;font-weight:700}
-.top-actions-group{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.admin-trigger{background:rgba(0,0,0,.35);color:#ffe9b0;border:1px solid var(--gold-bright);padding:5px 14px;border-radius:99px;font-size:.8rem;cursor:pointer;font-weight:700;transition:all .2s}
-.admin-trigger:hover{background:rgba(0,0,0,.5)}
-.admin-trigger.logged{background:#0b6e29;border-color:#a3f7bf;color:#fff}
-.theme-toggle{background:rgba(0,0,0,.35);color:#ffe9b0;border:1px solid var(--gold-bright);padding:5px 12px;border-radius:99px;font-size:.85rem;cursor:pointer;font-weight:700;transition:all .2s;line-height:1}
-.theme-toggle:hover{background:rgba(0,0,0,.5)}
-.emblem-ring{width:72px;height:72px;margin:4px auto 6px;border-radius:50%;background:radial-gradient(circle,#ffe699 0%,#c89223 70%);padding:4px;box-shadow:0 0 22px rgba(245,195,82,.55);display:flex;align-items:center;justify-content:center}
-.top h1{color:#fff2cc;margin:6px 0 4px;font-size:1.95rem;text-shadow:0 3px 8px rgba(0,0,0,.65)}
-.top .sub{font-size:.92rem;color:#f9dfa2;max-width:780px;margin:0 auto;opacity:.95}
-.feature-pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:12px}
-.feature-pills span{background:rgba(255,248,225,.12);border:1px solid rgba(245,195,82,.45);color:#ffebb3;padding:3px 11px;border-radius:99px;font-size:.78rem;font-weight:600}
 
-/* ===== STICKY NAV WITH DROPDOWNS ===== */
+/* ===== PREMIUM HEADER ===== */
+.top{
+  background: linear-gradient(135deg, #2a0a08 0%, #5a110c 50%, #1a0604 100%);
+  color:#ffe9b0;text-align:center;padding:28px 16px 24px;
+  border-bottom:3px solid var(--gold-bright);position:relative;overflow:hidden;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+.top::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%, rgba(229,177,58,.15), transparent 60%);
+  pointer-events:none;
+}
+.top-bar-actions{
+  display:flex;justify-content:space-between;align-items:center;max-width:1080px;margin:0 auto 16px;position:relative;z-index:2;flex-wrap:wrap;gap:12px;
+}
+.top .mantra{
+  display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(229,177,58,.4);
+  padding:6px 18px;border-radius:99px;font-size:.85rem;color:#ffe18d;
+  letter-spacing:.6px;font-weight:700;backdrop-filter:blur(4px);
+}
+.top-actions-group{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.glass-btn{
+  background:rgba(255,255,255,.1);color:#ffe9b0;border:1px solid rgba(229,177,58,.5);
+  padding:6px 16px;border-radius:99px;font-size:.85rem;cursor:pointer;font-weight:700;
+  transition:all .2s;backdrop-filter:blur(4px);display:inline-flex;align-items:center;gap:6px;
+}
+.glass-btn:hover{background:rgba(255,255,255,.2);border-color:#fff;box-shadow:0 0 15px rgba(229,177,58,.3)}
+.glass-btn.logged{background:rgba(11,110,41,.8);border-color:#4ade80;color:#fff}
+
+.emblem-ring{
+  width:80px;height:80px;margin:8px auto 12px;border-radius:50%;
+  background:radial-gradient(circle,#fff0c2 0%,#e5b13a 100%);
+  padding:5px;box-shadow:0 0 30px rgba(229,177,58,.4);
+  display:flex;align-items:center;justify-content:center;position:relative;z-index:2;
+}
+.top h1{
+  color:#fff;margin:10px 0 6px;font-size:2.1rem;position:relative;z-index:2;
+  text-shadow:0 4px 12px rgba(0,0,0,0.8);
+}
+.top .sub{
+  font-size:.95rem;color:#f9dfa2;max-width:780px;margin:0 auto;opacity:.9;position:relative;z-index:2;
+}
+.feature-pills{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:18px;position:relative;z-index:2;padding:0 10px;
+}
+.feature-pills span{
+  background:rgba(0,0,0,.3);border:1px solid rgba(229,177,58,.3);
+  color:#ffebb3;padding:4px 12px;border-radius:99px;font-size:.78rem;font-weight:600;
+  backdrop-filter:blur(4px);
+}
+
+/* ===== MODERN STICKY NAV (NO DROPDOWNS) ===== */
 .sticky-nav{
   position:sticky;top:0;z-index:500;
-  background:linear-gradient(180deg,rgba(62,5,2,.97),rgba(74,8,4,.97));
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  border-bottom:2px solid var(--gold-bright);
-  box-shadow:0 4px 18px rgba(0,0,0,.3);
+  background:rgba(30, 8, 4, 0.85);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(229,177,58,.2);
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
 }
-.nav-inner{display:flex;align-items:center;max-width:1100px;margin:auto;padding:0 12px;gap:2px;overflow-x:auto}
-.nav-item{position:relative;flex-shrink:0}
-.nav-trigger{
-  background:transparent;border:none;color:#ffe9b0;padding:12px 14px;font-weight:700;font-size:.85rem;
-  cursor:pointer;display:flex;align-items:center;gap:5px;transition:all .18s;font-family:'Mukta Malar',sans-serif;
-  box-shadow:none;border-radius:6px;margin:4px 0;
+.nav-inner{
+  display:flex;align-items:center;max-width:1100px;margin:auto;padding:10px 16px;gap:8px;
+  overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;
 }
-.nav-trigger:hover,.nav-trigger.active{background:rgba(245,195,82,.18);color:#fff;transform:none;box-shadow:none}
-.nav-trigger .caret{font-size:.7rem;transition:transform .2s}
-.nav-item:hover .nav-trigger .caret{transform:rotate(180deg)}
-.nav-dropdown{
-  position:absolute;top:calc(100% - 2px);left:0;min-width:260px;background:var(--surface);
-  border:2px solid var(--gold);border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,.35);
-  padding:8px;display:none;z-index:501;
+.nav-inner::-webkit-scrollbar{display:none}
+.nav-pill{
+  color:#f9dfa2;padding:8px 16px;border-radius:99px;font-weight:600;font-size:.88rem;
+  text-decoration:none;white-space:nowrap;transition:all .2s;border:1px solid transparent;
 }
-.nav-item:hover .nav-dropdown,.nav-item.open .nav-dropdown{display:block;animation:fadeSlide .18s ease}
-@keyframes fadeSlide{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
-.nav-dropdown a{
-  display:flex;align-items:center;gap:8px;padding:9px 12px;color:var(--ink);text-decoration:none;
-  border-radius:6px;font-size:.87rem;font-weight:600;transition:all .15s;
+.nav-pill:hover{
+  background:rgba(229,177,58,.15);border-color:rgba(229,177,58,.4);color:#fff;
 }
-.nav-dropdown a:hover{background:var(--gold-light);color:var(--red);transform:translateX(2px)}
-[data-theme="dark"] .nav-dropdown a:hover{color:var(--gold-bright)}
-.nav-dropdown a .badge-mini{background:var(--red);color:#fff;font-size:.65rem;padding:1px 6px;border-radius:99px;margin-left:auto}
-@media(max-width:680px){.nav-trigger{padding:10px 10px;font-size:.78rem}}
+.nav-pill.active{
+  background:linear-gradient(135deg,#e5b13a,#c89223);color:#2a0a08;font-weight:700;
+}
 
 /* ===== BODY LAYOUT ===== */
-.wrap{max-width:1100px;margin:auto;padding:18px 14px 40px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-@media(max-width:760px){.grid,.grid3{grid-template-columns:1fr}.top h1{font-size:1.45rem}}
+.wrap{max-width:1100px;margin:auto;padding:24px 16px 60px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:760px){.grid,.grid3{grid-template-columns:1fr}.top h1{font-size:1.6rem}}
 
-/* ===== CARDS ===== */
+/* ===== PREMIUM CARDS ===== */
 .card{
-  background:linear-gradient(180deg,var(--card) 0%,rgba(255,248,232,.95) 100%);color:var(--ink);
-  border:2px solid var(--gold);border-radius:14px;padding:18px;
-  box-shadow:0 8px 24px rgba(124,19,13,.1), 0 3px 0 var(--red);
-  position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;
+  background:var(--card);color:var(--ink);
+  border:1px solid var(--border);border-radius:16px;padding:22px;
+  box-shadow:var(--shadow-md);
+  position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;
 }
-[data-theme="dark"] .card{background:linear-gradient(180deg,#241610,#1f1208)}
-.card:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(124,19,13,.15), 0 4px 0 var(--red)}
-.card.groom-card{border-top:5px solid #8c1c13}
-.card.bride-card{border-top:5px solid #0b6e29}
-.card-title{display:flex;align-items:center;justify-content:space-between;border-bottom:2px dashed rgba(200,146,35,.65);padding-bottom:10px;margin-bottom:12px}
-.role-avatar{display:flex;align-items:center;gap:10px}
-.role-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.25rem;background:linear-gradient(135deg,#fff0c2,#e4b34c);border:2px solid var(--red);box-shadow:0 2px 6px rgba(0,0,0,.15)}
-label{display:block;font-size:.85rem;margin-top:9px;margin-bottom:2px;font-weight:700;color:#5a2310}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.card.groom-card{border-top:4px solid #7c130d}
+.card.bride-card{border-top:4px solid #0b6e29}
+.card-title{
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px dashed var(--border);padding-bottom:12px;margin-bottom:16px;
+}
+.role-avatar{display:flex;align-items:center;gap:12px}
+.role-icon{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;background:linear-gradient(135deg,var(--gold-light),var(--gold));
+  border:1px solid var(--border);box-shadow:inset 0 2px 4px rgba(255,255,255,.5);
+}
+label{display:block;font-size:.85rem;margin-top:12px;margin-bottom:4px;font-weight:700;color:#5a2310}
 [data-theme="dark"] label{color:#d4a845}
 input,select,textarea{
-  width:100%;padding:9px 12px;border:1.5px solid #d4a64a;border-radius:8px;
-  font:inherit;background:var(--surface);color:var(--ink);font-size:.94rem;
-  transition:border-color .15s,box-shadow .15s;
+  width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;
+  font:inherit;background:var(--surface);color:var(--ink);font-size:.95rem;
+  transition:all .2s;box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);
 }
-input:focus,select:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 3px rgba(124,19,13,.15);background:#fff}
-[data-theme="dark"] input:focus,[data-theme="dark"] select:focus{background:#2a1a0e}
+input:focus,select:focus{
+  outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(229,177,58,0.15);
+}
+[data-theme="dark"] input,[data-theme="dark"] select{background:#2a1a0e}
 
-.btn-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;margin-top:18px;padding:14px;background:rgba(255,250,235,.85);border:1.5px solid var(--gold);border-radius:12px}
-[data-theme="dark"] .btn-row{background:rgba(36,22,16,.8)}
+.btn-row{
+  display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;
+  margin-top:22px;padding:18px;background:var(--card);
+  border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-sm);
+}
 button{
-  background:linear-gradient(135deg,#991b14 0%,#630b06 100%);color:#ffe9b0;border:2px solid var(--gold-bright);
-  padding:11px 22px;border-radius:10px;font:700 1rem 'Mukta Malar',sans-serif;cursor:pointer;
-  box-shadow:0 4px 12px rgba(124,19,13,.3);transition:all .18s ease;display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,#e5b13a 0%,#c89223 100%);color:#2a0a08;
+  border:none;padding:12px 24px;border-radius:12px;
+  font:700 1rem 'Mukta Malar',sans-serif;cursor:pointer;
+  box-shadow:0 4px 15px rgba(200,146,35,.3);transition:all .2s ease;
+  display:inline-flex;align-items:center;gap:8px;
 }
-button:hover{filter:brightness(1.12);transform:translateY(-1px);box-shadow:0 6px 16px rgba(124,19,13,.4)}
+button:hover{filter:brightness(1.08);transform:translateY(-2px);box-shadow:0 6px 20px rgba(200,146,35,.5)}
 button:active{transform:translateY(1px)}
-button.sec{background:linear-gradient(180deg,#fffdf8,#f7e5b9);color:var(--red);border:2px solid var(--red);box-shadow:0 3px 8px rgba(0,0,0,.08)}
-[data-theme="dark"] button.sec{background:linear-gradient(180deg,#2a1a0e,#1f1208);color:var(--gold-bright);border-color:var(--gold)}
-button.gold-btn{background:linear-gradient(135deg,#d49a23 0%,#9b6b0b 100%);color:#fff;border-color:#4a0804;box-shadow:0 4px 12px rgba(155,107,11,.35)}
-button.ok-btn{background:linear-gradient(135deg,#0f8a36 0%,#07521e 100%);color:#fff;border-color:#9ef2b8}
-
-/* ===== SPINNER ===== */
-.loader-overlay{
-  position:fixed;inset:0;background:rgba(20,5,2,.7);backdrop-filter:blur(6px);
-  z-index:2000;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;
+button.sec{
+  background:var(--surface);color:var(--red);border:2px solid var(--border);
+  box-shadow:var(--shadow-sm);
 }
-.loader-overlay.show{display:flex}
-.spinner{
-  width:60px;height:60px;border:5px solid rgba(245,195,82,.25);border-top-color:var(--gold-bright);
-  border-radius:50%;animation:spin 1s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loader-text{color:#ffe9b0;font-weight:700;font-size:1rem;font-family:'Noto Serif Tamil',serif}
+[data-theme="dark"] button.sec{color:var(--gold-bright)}
+button.ok-btn{background:linear-gradient(135deg,#0f8a36 0%,#07521e 100%);color:#fff;box-shadow:0 4px 15px rgba(11,110,41,.3)}
 
-/* ===== REPORT ===== */
-#report{background:var(--surface);color:var(--ink);padding:22px;margin-top:16px;border:4px double var(--red);border-radius:6px;box-shadow:0 10px 32px rgba(60,15,5,.16);position:relative}
-.ornate-box{border:1.5px solid var(--gold);padding:13px 15px;border-radius:10px;background:linear-gradient(180deg,var(--surface),var(--gold-light));margin-bottom:14px;page-break-inside:avoid;box-shadow:inset 0 0 0 2px rgba(255,255,255,.5)}
-[data-theme="dark"] .ornate-box{background:linear-gradient(180deg,#2a1a0e,#1f1208);box-shadow:none}
-.pg{page-break-inside:avoid;margin-bottom:22px}
+/* ===== REPORT STYLING ===== */
+#report{
+  background:var(--surface);color:var(--ink);padding:26px;margin-top:20px;
+  border:1px solid var(--border);border-radius:16px;
+  box-shadow:var(--shadow-lg);position:relative;
+}
+.ornate-box{
+  border:1px solid var(--border);padding:16px;border-radius:12px;
+  background:var(--gold-light);margin-bottom:16px;page-break-inside:avoid;
+}
+[data-theme="dark"] .ornate-box{background:rgba(36,22,16,.5)}
+.pg{page-break-inside:avoid;margin-bottom:28px}
 .pg-break{page-break-before:always}
 
-.rep-banner{text-align:center;border:3px double var(--gold);background:radial-gradient(circle at 50% 0%,#ffefc2 0%,var(--surface) 75%);padding:16px 14px;border-radius:10px;margin-bottom:16px;position:relative}
-[data-theme="dark"] .rep-banner{background:radial-gradient(circle at 50% 0%,#3a2412 0%,#1f1208 75%)}
-.rep-banner .mantra-top{font-size:.9rem;color:var(--red);font-weight:700;letter-spacing:.4px}
-[data-theme="dark"] .rep-banner .mantra-top{color:var(--gold-bright)}
-.rep-banner .center-title{font-size:1.45rem;font-family:'Noto Serif Tamil',serif;color:var(--red);margin:5px 0;text-shadow:0 1px 0 rgba(255,255,255,.8)}
-.rep-banner .astro-sub{font-size:.88rem;color:#4a2511;font-weight:700;background:#f8e6b8;display:inline-block;padding:3px 14px;border-radius:99px;border:1px solid #d4a64a;margin-top:2px}
-[data-theme="dark"] .rep-banner .astro-sub{background:#3a2412;color:#ffd98a}
+.rep-banner{
+  text-align:center;border:2px solid var(--gold);border-radius:16px;
+  background:linear-gradient(180deg,var(--gold-light),var(--surface));
+  padding:24px 16px;margin-bottom:20px;position:relative;overflow:hidden;
+}
+[data-theme="dark"] .rep-banner{background:linear-gradient(180deg,#2a1a0e,#1f1208)}
+.rep-banner .mantra-top{font-size:.95rem;color:var(--red);font-weight:700;letter-spacing:.5px}
+.rep-banner .center-title{font-size:1.6rem;color:var(--red);margin:8px 0;font-weight:700}
+.rep-banner .astro-sub{
+  font-size:.9rem;color:#4a2511;font-weight:700;
+  background:var(--surface);display:inline-block;padding:4px 16px;border-radius:99px;
+  border:1px solid var(--border);box-shadow:var(--shadow-sm);
+}
+[data-theme="dark"] .rep-banner .astro-sub{color:var(--gold-bright)}
 
-.rep-footer{margin-top:20px;border:2px solid var(--gold);border-top:4px double var(--red);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;background:linear-gradient(180deg,var(--gold-light),var(--surface));padding:14px 16px;border-radius:8px;page-break-inside:avoid}
-[data-theme="dark"] .rep-footer{background:linear-gradient(180deg,#2a1a0e,#1f1208)}
-.seal-box{text-align:center;border:2px dashed var(--red);padding:10px 18px;border-radius:8px;background:var(--surface);min-width:230px;position:relative}
+.rep-footer{
+  margin-top:24px;border:1px solid var(--border);border-top:4px solid var(--red);
+  display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;
+  background:var(--surface);padding:20px;border-radius:12px;page-break-inside:avoid;
+  box-shadow:var(--shadow-sm);
+}
+.seal-box{
+  text-align:center;border:2px dashed var(--red);padding:12px 20px;border-radius:12px;
+  background:var(--gold-light);min-width:240px;
+}
 
-.hd{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:linear-gradient(90deg,#7c130d 0%,#9e2119 60%,#7c130d 100%);color:#ffe9b0;padding:9px 14px;border-radius:8px;border:1.5px solid var(--gold-bright);margin-bottom:12px;box-shadow:0 2px 6px rgba(124,19,13,.2)}
-.hd h2{color:#ffe9b0;margin:0;font-size:1.15rem}
-.badge{display:inline-block;padding:3px 11px;border-radius:99px;font-size:.78rem;font-weight:700;border:1px solid var(--gold);background:#f9e7b8;color:var(--red)}
-.badge.ok-b{background:#e2f8e8;color:var(--ok);border-color:var(--ok)}
-.badge.no-b{background:#fde6e6;color:var(--no);border-color:var(--no)}
-.badge.mid-b{background:#fff1cc;color:var(--mid);border-color:var(--mid)}
+.hd{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  background:linear-gradient(90deg,var(--red-dark) 0%,var(--red) 50%,var(--red-dark) 100%);
+  color:#fff;padding:12px 18px;border-radius:10px;
+  border:1px solid var(--gold);margin-bottom:16px;box-shadow:var(--shadow-sm);
+}
+.hd h2{color:#fff;margin:0;font-size:1.2rem}
+.badge{display:inline-block;padding:4px 12px;border-radius:99px;font-size:.78rem;font-weight:700;border:1px solid var(--border);background:var(--surface);color:var(--ink)}
+.badge.ok-b{background:rgba(11,110,41,.1);color:var(--ok);border-color:var(--ok)}
+.badge.no-b{background:rgba(184,20,15,.1);color:var(--no);border-color:var(--no)}
+.badge.mid-b{background:rgba(168,100,0,.1);color:var(--mid);border-color:var(--mid)}
 
-.couple-hero{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center;margin-bottom:14px}
+.couple-hero{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;margin-bottom:20px}
 @media(max-width:680px){.couple-hero{grid-template-columns:1fr}}
-.couple-knot{width:56px;height:56px;border-radius:50%;margin:auto;background:radial-gradient(circle,#ffe69e,#c89223);border:3px solid var(--red);display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 4px 10px rgba(124,19,13,.25)}
+.couple-knot{
+  width:64px;height:64px;border-radius:50%;margin:auto;
+  background:linear-gradient(135deg,var(--gold-light),var(--gold));
+  border:2px solid var(--red);display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;box-shadow:0 6px 15px rgba(124,19,13,.2);
+}
 
-table{width:100%;border-collapse:collapse;font-size:.84rem;margin:8px 0;background:var(--surface);border-radius:6px;overflow:hidden}
-td,th{border:1px solid var(--border);padding:6px 8px;text-align:left;vertical-align:middle}
-th{background:linear-gradient(180deg,#f6e0aa,#ecd08b);color:#42170b;font-weight:700;font-family:'Noto Serif Tamil',serif;font-size:.82rem}
-[data-theme="dark"] th{background:linear-gradient(180deg,#3a2412,#2a1a0e);color:#ffd98a}
-tr:nth-child(even) td{background:rgba(255,250,240,.6)}
-[data-theme="dark"] tr:nth-child(even) td{background:rgba(42,26,14,.4)}
-.ok{color:var(--ok);font-weight:700}
-.no{color:var(--no);font-weight:700}
-.mid{color:var(--mid);font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin:12px 0;background:var(--surface);border-radius:8px;overflow:hidden;box-shadow:var(--shadow-sm)}
+td,th{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:middle}
+th{background:var(--gold-light);color:var(--red);font-weight:700;font-family:'Noto Serif Tamil',serif}
+[data-theme="dark"] th{background:rgba(36,22,16,.8);color:var(--gold-bright)}
+tr:nth-child(even) td{background:rgba(0,0,0,0.02)}
+[data-theme="dark"] tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
+.ok{color:var(--ok);font-weight:700}.no{color:var(--no);font-weight:700}.mid{color:var(--mid);font-weight:700}
 
-.score-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0}
+.score-wrap{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
 @media(max-width:640px){.score-wrap{grid-template-columns:1fr}}
-.score-box{display:flex;align-items:center;gap:14px;border:2px solid var(--gold);border-radius:12px;padding:14px;background:linear-gradient(135deg,var(--surface) 0%,var(--gold-light) 100%);box-shadow:0 3px 10px rgba(200,146,35,.15)}
-[data-theme="dark"] .score-box{background:linear-gradient(135deg,#2a1a0e,#1f1208)}
-.gauge-svg{width:88px;height:88px;flex-shrink:0}
-.score-info{flex:1;text-align:left}
-.score{font-size:1.55rem;font-family:'Noto Serif Tamil',serif;color:var(--red);font-weight:700;line-height:1.2}
+.score-box{
+  display:flex;align-items:center;gap:16px;border:1px solid var(--border);border-radius:16px;
+  padding:16px;background:var(--surface);box-shadow:var(--shadow-sm);
+}
+.gauge-svg{width:90px;height:90px;flex-shrink:0}
+.score-info{flex:1}
+.score{font-size:1.6rem;font-family:'Noto Serif Tamil',serif;color:var(--red);font-weight:700;line-height:1.2}
 [data-theme="dark"] .score{color:var(--gold-bright)}
 
 .ch-wrap{display:flex;flex-direction:column;align-items:center}
-.ch{display:grid;grid-template-columns:repeat(4,1fr);width:100%;max-width:370px;border:3px solid #7c130d;background:var(--surface);box-shadow:0 4px 14px rgba(124,19,13,.15);border-radius:4px;overflow:hidden}
-.ch div{border:1px solid var(--gold);min-height:74px;padding:4px 5px;font-size:.79rem;background:linear-gradient(180deg,var(--surface),var(--gold-light));position:relative}
-[data-theme="dark"] .ch div{background:linear-gradient(180deg,#2a1a0e,#1f1208)}
-.ch .c{grid-column:2/4;grid-row:2/4;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-weight:700;color:var(--red);background:radial-gradient(circle,#fff4d1 0%,#f2d488 100%);padding:8px;border:2px solid #7c130d}
-[data-theme="dark"] .ch .c{background:radial-gradient(circle,#3a2412,#1f1208);color:var(--gold-bright)}
-.ch small{color:#8c6438;display:block;font-size:.63rem;font-weight:700;margin-bottom:2px}
-.lg{color:#fff;font-weight:700;background:#b3140f;padding:0 4px;border-radius:3px;font-size:.72rem;display:inline-block}
-.pl-tag{display:inline-block;margin:1px 2px 1px 0;padding:0 4px;border-radius:3px;background:var(--gold-light);border:1px solid #dec07d;font-weight:700;color:var(--ink);font-size:.74rem}
-[data-theme="dark"] .pl-tag{background:#3a2412;color:#ffd98a;border-color:#5a3c1c}
+.ch{display:grid;grid-template-columns:repeat(4,1fr);width:100%;max-width:370px;border:2px solid var(--red);background:var(--surface);box-shadow:var(--shadow-md);border-radius:8px;overflow:hidden}
+.ch div{border:1px solid var(--border);min-height:74px;padding:6px;font-size:.8rem;background:var(--surface);position:relative}
+.ch .c{grid-column:2/4;grid-row:2/4;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-weight:700;color:var(--red);background:var(--gold-light);padding:10px;border:1px solid var(--border)}
+[data-theme="dark"] .ch .c{background:rgba(36,22,16,.8);color:var(--gold-bright)}
+.ch small{color:#8c6438;display:block;font-size:.65rem;font-weight:700;margin-bottom:2px}
+.lg{color:#fff;font-weight:700;background:var(--red);padding:1px 5px;border-radius:4px;font-size:.72rem;display:inline-block}
+.pl-tag{display:inline-block;margin:2px 2px 2px 0;padding:1px 5px;border-radius:4px;background:var(--gold-light);border:1px solid var(--border);font-weight:700;color:var(--ink);font-size:.75rem}
 
-.dc{border:1.5px solid var(--border);border-left:5px solid var(--gold);border-radius:8px;padding:10px 12px;margin:9px 0;background:linear-gradient(180deg,var(--surface),var(--gold-light));page-break-inside:avoid;font-size:.84rem}
-[data-theme="dark"] .dc{background:linear-gradient(180deg,#2a1a0e,#1f1208)}
-.dc.now{border-color:#7c130d;border-left-width:6px;background:linear-gradient(180deg,#fff7db,#ffebb3);box-shadow:0 3px 10px rgba(124,19,13,.12)}
-[data-theme="dark"] .dc.now{background:linear-gradient(180deg,#3a2412,#2a1a0e)}
-.bhukti-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:7px;background:var(--surface);padding:7px;border:1px dashed var(--gold);border-radius:6px}
+.dc{border:1px solid var(--border);border-left:4px solid var(--gold);border-radius:10px;padding:12px;margin:10px 0;background:var(--surface);page-break-inside:avoid;font-size:.85rem}
+.dc.now{border-color:var(--red);border-left-width:6px;background:var(--gold-light)}
+[data-theme="dark"] .dc.now{background:rgba(36,22,16,.8)}
+.bhukti-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;background:var(--surface);padding:8px;border:1px dashed var(--border);border-radius:8px}
 @media(max-width:640px){.bhukti-grid{grid-template-columns:1fr 1fr}}
-.bh-item{font-size:.74rem;padding:4px 6px;border:1px solid #ead49c;border-radius:4px;background:var(--surface)}
-.bh-item.bh-now{background:var(--red);color:#ffe9b0;border-color:#4a0804;font-weight:700}
+.bh-item{font-size:.75rem;padding:5px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface)}
+.bh-item.bh-now{background:var(--red);color:#fff;border-color:var(--red-dark);font-weight:700}
 
-.life-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.life-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
 @media(max-width:640px){.life-grid{grid-template-columns:1fr}}
-.life-item{border:1px solid var(--border);border-left:4px solid var(--red);background:linear-gradient(180deg,var(--surface),var(--gold-light));padding:9px 11px;border-radius:8px;font-size:.84rem}
-[data-theme="dark"] .life-item{background:linear-gradient(180deg,#2a1a0e,#1f1208)}
-.life-item b{color:var(--red);font-family:'Noto Serif Tamil',serif;font-size:.86rem}
+.life-item{border:1px solid var(--border);border-left:4px solid var(--red);background:var(--surface);padding:12px;border-radius:10px;font-size:.85rem;box-shadow:var(--shadow-sm)}
+.life-item b{color:var(--red);font-family:'Noto Serif Tamil',serif;font-size:.9rem}
 [data-theme="dark"] .life-item b{color:var(--gold-bright)}
-.sec-sub{display:flex;align-items:center;gap:7px;color:var(--red);border-bottom:2px solid #e6c67c;padding-bottom:4px;margin:14px 0 8px}
-[data-theme="dark"] .sec-sub{color:var(--gold-bright)}
-.note{font-size:.78rem;color:#66462c;margin-top:6px}
+.sec-sub{display:flex;align-items:center;gap:8px;color:var(--red);border-bottom:2px solid var(--border);padding-bottom:6px;margin:20px 0 10px;font-weight:700}
+.note{font-size:.8rem;color:#66462c;margin-top:8px}
 [data-theme="dark"] .note{color:#b89a70}
 
-.dmy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:10px 0}
+.dmy-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:12px 0}
 @media(max-width:780px){.dmy-grid{grid-template-columns:1fr}}
-.dmy-card{border:2px solid var(--gold);border-top:4px solid var(--red);border-radius:10px;background:linear-gradient(180deg,var(--surface),var(--gold-light));padding:12px;box-shadow:0 3px 10px rgba(124,19,13,.08)}
-[data-theme="dark"] .dmy-card{background:linear-gradient(180deg,#2a1a0e,#1f1208)}
-.dmy-card h4{margin:0 0 6px;color:var(--red);font-size:1rem;border-bottom:1px dashed var(--border);padding-bottom:4px}
+.dmy-card{border:1px solid var(--border);border-top:3px solid var(--red);border-radius:12px;background:var(--surface);padding:14px;box-shadow:var(--shadow-sm)}
+.dmy-card h4{margin:0 0 8px;color:var(--red);font-size:1rem;border-bottom:1px dashed var(--border);padding-bottom:6px}
 [data-theme="dark"] .dmy-card h4{color:var(--gold-bright)}
-.luck-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.luck-pills span{background:var(--gold-light);border:1px solid var(--gold);padding:2px 8px;border-radius:99px;font-size:.75rem;font-weight:700;color:var(--ink)}
-[data-theme="dark"] .luck-pills span{background:#3a2412;color:#ffd98a}
+.luck-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.luck-pills span{background:var(--gold-light);border:1px solid var(--border);padding:3px 10px;border-radius:99px;font-size:.75rem;font-weight:700;color:var(--ink)}
+[data-theme="dark"] .luck-pills span{color:#ffd98a}
 
-/* Cloud Panel */
-.cloud-panel{background:linear-gradient(180deg,var(--surface),var(--gold-light));border:2px solid var(--gold);border-left:6px solid var(--red);border-radius:12px;padding:16px;margin-top:18px;box-shadow:0 6px 18px rgba(124,19,13,.09)}
-[data-theme="dark"] .cloud-panel{background:linear-gradient(180deg,#2a1a0e,#1f1208)}
-.cloud-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-.filter-bar{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;background:var(--surface);padding:10px;border:1px solid #dec07d;border-radius:8px;margin-bottom:12px}
+.cloud-panel{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--red);border-radius:16px;padding:20px;margin-top:24px;box-shadow:var(--shadow-md)}
+.cloud-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.filter-bar{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:12px;background:var(--bg);padding:12px;border:1px solid var(--border);border-radius:12px;margin-bottom:16px}
 @media(max-width:760px){.filter-bar{grid-template-columns:1fr}}
-.cloud-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;max-height:420px;overflow-y:auto;padding:4px}
-.cloud-item{background:var(--surface);border:1.5px solid #dec07d;border-radius:10px;padding:12px;display:flex;flex-direction:column;justify-content:space-between;gap:8px;transition:all .18s;position:relative}
-.cloud-item:hover{border-color:var(--red);box-shadow:0 6px 16px rgba(124,19,13,.18);transform:translateY(-2px)}
-.cloud-item.editing{border:2px solid #0b6e29;background:rgba(243,252,245,.7)}
-[data-theme="dark"] .cloud-item.editing{background:rgba(15,80,40,.2)}
-.cloud-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
-.cloud-actions button{padding:5px 10px;font-size:.76rem;border-radius:6px}
+.cloud-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;max-height:480px;overflow-y:auto;padding:4px}
+.cloud-item{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;transition:all .2s}
+.cloud-item:hover{border-color:var(--gold);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.cloud-item.editing{border:2px solid var(--ok);background:rgba(11,110,41,.05)}
+.cloud-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.cloud-actions button{padding:6px 12px;font-size:.78rem;border-radius:8px}
 
-.modal-backdrop{position:fixed;inset:0;background:rgba(30,8,4,.72);z-index:999;display:none;align-items:center;justify-content:center;padding:16px}
-.modal-box{background:linear-gradient(180deg,var(--surface),var(--gold-light));border:3px solid var(--gold);border-top:6px solid var(--red);border-radius:14px;max-width:420px;width:100%;padding:22px;box-shadow:0 16px 40px rgba(0,0,0,.45)}
-[data-theme="dark"] .modal-box{background:linear-gradient(180deg,#2a1a0e,#1f1208)}
+.modal-backdrop{position:fixed;inset:0;background:rgba(20,5,2,.8);backdrop-filter:blur(4px);z-index:999;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-box{background:var(--surface);border:2px solid var(--gold);border-radius:16px;max-width:420px;width:100%;padding:24px;box-shadow:var(--shadow-lg)}
 
-details.astro-cfg{background:linear-gradient(180deg,var(--surface),var(--gold-light));border:2px solid var(--gold);border-radius:12px;padding:12px 16px;margin-bottom:16px;box-shadow:0 4px 12px rgba(0,0,0,.05)}
-[data-theme="dark"] details.astro-cfg{background:linear-gradient(180deg,#2a1a0e,#1f1208)}
+details.astro-cfg{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:20px;box-shadow:var(--shadow-sm);transition:all .2s}
 details.astro-cfg summary{cursor:pointer;font-weight:700;color:var(--red);font-family:'Noto Serif Tamil',serif;display:flex;align-items:center;justify-content:space-between;list-style:none}
 [data-theme="dark"] details.astro-cfg summary{color:var(--gold-bright)}
 details.astro-cfg summary::-webkit-details-marker{display:none}
 
-.rep-nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0 6px;padding:10px;background:var(--gold-light);border:1.5px solid var(--gold);border-radius:10px}
-.rep-nav a{text-decoration:none;font-size:.83rem;font-weight:700;color:var(--red);background:var(--surface);border:1px solid var(--gold);padding:5px 12px;border-radius:99px;transition:all .15s}
-[data-theme="dark"] .rep-nav a{color:var(--gold-bright)}
-.rep-nav a:hover{background:var(--red);color:#ffe9b0}
+.rep-nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0 8px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-sm)}
+.rep-nav a{text-decoration:none;font-size:.85rem;font-weight:700;color:var(--ink);background:var(--gold-light);border:1px solid var(--border);padding:6px 14px;border-radius:99px;transition:all .2s}
+.rep-nav a:hover{background:var(--gold);color:#2a0a08}
 
-/* New: Panchangam strip */
-.panchangam-strip{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;
-  background:linear-gradient(135deg,var(--surface),var(--gold-light));
-  border:2px solid var(--gold);border-radius:12px;padding:14px;margin:14px 0;
-}
-[data-theme="dark"] .panchangam-strip{background:linear-gradient(135deg,#2a1a0e,#1f1208)}
-.panch-item{text-align:center;padding:8px;border-radius:8px;background:rgba(255,255,255,.5);border:1px solid var(--border)}
-[data-theme="dark"] .panch-item{background:rgba(42,26,14,.5)}
-.panch-item small{display:block;font-size:.7rem;color:#7a5a40;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
-[data-theme="dark"] .panch-item small{color:#b89a70}
-.panch-item b{display:block;font-size:.92rem;color:var(--red);font-family:'Noto Serif Tamil',serif;margin-top:2px}
+/* NEW: Panchangam & Info Cards */
+.panchangam-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin:16px 0;box-shadow:var(--shadow-sm)}
+.panch-item{text-align:center;padding:10px;border-radius:10px;background:var(--gold-light);border:1px solid var(--border)}
+.panch-item small{display:block;font-size:.72rem;color:#7a5a40;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.panch-item b{display:block;font-size:.95rem;color:var(--red);font-family:'Noto Serif Tamil',serif;margin-top:4px}
 [data-theme="dark"] .panch-item b{color:var(--gold-bright)}
 
-/* Numerology / remedy cards */
-.info-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:10px 0}
-.info-card{
-  border:1.5px solid var(--gold);border-radius:10px;padding:12px;
-  background:linear-gradient(135deg,var(--surface),var(--gold-light));
-  position:relative;overflow:hidden;
-}
-[data-theme="dark"] .info-card{background:linear-gradient(135deg,#2a1a0e,#1f1208)}
+.info-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:12px 0}
+.info-card{border:1px solid var(--border);border-radius:12px;padding:14px;background:var(--surface);position:relative;overflow:hidden;box-shadow:var(--shadow-sm)}
 .info-card::before{content:"";position:absolute;top:0;left:0;width:4px;height:100%;background:var(--red)}
 .info-card h4{margin:0 0 6px;color:var(--red);font-size:.95rem}
-[data-theme="dark"] .info-card h4{color:var(--gold-bright)}
-.info-card .num-big{font-size:2rem;font-family:'Noto Serif Tamil',serif;color:var(--red);font-weight:700;line-height:1}
-[data-theme="dark"] .info-card .num-big{color:var(--gold-bright)}
+.info-card .num-big{font-size:2.2rem;font-family:'Noto Serif Tamil',serif;color:var(--red);font-weight:700;line-height:1}
 .info-card small{display:block;font-size:.72rem;color:#7a5a40;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
-[data-theme="dark"] .info-card small{color:#b89a70}
 
-.muhurtham-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
-.muhurtham-item{
-  border:1.5px solid var(--gold);border-radius:8px;padding:10px;
-  background:linear-gradient(135deg,#e8f8ec,var(--surface));
-}
-[data-theme="dark"] .muhurtham-item{background:linear-gradient(135deg,rgba(15,80,40,.3),#2a1a0e)}
+.muhurtham-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.muhurtham-item{border:1px solid var(--border);border-radius:12px;padding:12px;background:var(--surface);box-shadow:var(--shadow-sm)}
 .muhurtham-item b{color:var(--ok);font-family:'Noto Serif Tamil',serif}
+
+.loader-overlay{position:fixed;inset:0;background:rgba(20,5,2,.8);backdrop-filter:blur(8px);z-index:2000;display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px}
+.loader-overlay.show{display:flex}
+.spinner{width:64px;height:64px;border:5px solid rgba(229,177,58,.2);border-top-color:var(--gold-bright);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-text{color:#ffe9b0;font-weight:700;font-size:1.1rem;font-family:'Noto Serif Tamil',serif;letter-spacing:.5px}
 </style>
 </head>
 <body>
 
-<!-- LOADER -->
 <div class="loader-overlay" id="loader">
   <div class="spinner"></div>
   <div class="loader-text">🔮 ஜாதகம் கணிக்கப்படுகிறது...</div>
@@ -321,103 +356,61 @@ details.astro-cfg summary::-webkit-details-marker{display:none}
   <div class="top-bar-actions">
     <div class="mantra">உ · முருகன் துணை</div>
     <div class="top-actions-group">
-      <button type="button" class="theme-toggle" id="themeBtn" title="Toggle theme">🌙</button>
-      <button type="button" id="adminModalBtn" class="admin-trigger">🔐 நிர்வாகி உள்நுழைவு</button>
+      <button type="button" class="glass-btn" id="themeBtn" title="Toggle theme">🌙</button>
+      <button type="button" id="adminModalBtn" class="glass-btn">🔐 நிர்வாகி</button>
     </div>
   </div>
   <div class="emblem-ring">
-    <svg width="60" height="60" viewBox="0 0 64 64">
-      <circle cx="32" cy="32" r="30" fill="#7c130d" stroke="#ffe9b0" stroke-width="2"/>
-      <circle cx="32" cy="32" r="22" fill="none" stroke="#f5c352" stroke-dasharray="3 2" stroke-width="1.5"/>
-      <g fill="#ffe9b0"><path d="M32 9l5.8 15h15.2L40.8 33.5l4.6 15L32 39.5l-13.4 9 4.6-15L11 24h15.2z"/></g>
+    <svg width="64" height="64" viewBox="0 0 64 64">
+      <circle cx="32" cy="32" r="30" fill="#7c130d" stroke="#fff" stroke-width="2"/>
+      <circle cx="32" cy="32" r="22" fill="none" stroke="#e5b13a" stroke-dasharray="3 3" stroke-width="1.5"/>
+      <g fill="#fff"><path d="M32 9l5.8 15h15.2L40.8 33.5l4.6 15L32 39.5l-13.4 9 4.6-15L11 24h15.2z"/></g>
       <circle cx="32" cy="32" r="5" fill="#7c130d"/>
     </svg>
   </div>
   <h1>இணையவழி திருக்கணித ஜோதிடம்</h1>
-  <div class="sub">திருமணப் பொருத்தம் · முழு ஜாதக ஆய்வு · தசவித (10) பொருத்தம் · தினசரி, மாத, வருட ராசிபலன் · செவ்வாய் / ராகு-கேது தோஷம் · தசா புத்தி</div>
+  <div class="sub">திருமணப் பொருத்தம் · முழு ஜாதக ஆய்வு · தசவித பொருத்தம் · தினசரி, மாத, வருட ராசிபலன் · செவ்வாய் / ராகு-கேது தோஷம்</div>
   <div class="feature-pills">
-    <span>🕉️ 10 திருமணப் பொருத்தம்</span>
-    <span>📅 தினசரி · மாத · வருட பலன்</span>
-    <span>🛡️ செவ்வாய் & நாக தோஷ ஆய்வு</span>
-    <span>🪐 9 தசா & 81 புத்திகள்</span>
+    <span>🕉️ 10 பொருத்தம்</span>
+    <span>📅 ராசிபலன்</span>
+    <span>🛡️ தோஷ ஆய்வு</span>
+    <span>🪐 தசா புத்தி</span>
     <span>🔢 எண் கணிதம்</span>
-    <span>💎 ரத்தின & பரிகாரம்</span>
-    <span>🗂️ சுயவிவர சேமிப்பு</span>
+    <span>💎 ரத்தினம்</span>
+    <span>🗂️ சேமிப்பு</span>
     <span>📄 A4 PDF</span>
   </div>
 </div>
 
-<!-- STICKY NAV WITH DROPDOWNS -->
+<!-- MODERN STICKY NAV (No Dropdowns) -->
 <nav class="sticky-nav">
   <div class="nav-inner">
-    <div class="nav-item">
-      <button class="nav-trigger">💑 பொருத்தம் <span class="caret">▾</span></button>
-      <div class="nav-dropdown">
-        <a href="#sec-match">📋 10 பொருத்த அட்டவணை</a>
-        <a href="#sec-match">❤️ காதல் & மன இணக்கம்</a>
-        <a href="#sec-dosha">🛡️ செவ்வாய் / நாக தோஷம்</a>
-        <a href="#sec-dosha">🔀 நாடி & பூதக தோஷம்</a>
-      </div>
-    </div>
-    <div class="nav-item">
-      <button class="nav-trigger">📅 ராசிபலன் <span class="caret">▾</span></button>
-      <div class="nav-dropdown">
-        <a href="#sec-panchangam">🌞 இன்றைய பஞ்சாங்கம்</a>
-        <a href="#sec-dmy">☀️ தினசரி ராசிபலன்</a>
-        <a href="#sec-dmy">🌙 மாத ராசிபலன்</a>
-        <a href="#sec-dmy">🪐 வருட ராசிபலன்</a>
-      </div>
-    </div>
-    <div class="nav-item">
-      <button class="nav-trigger">🤵 மணமகன் <span class="caret">▾</span></button>
-      <div class="nav-dropdown">
-        <a href="#sec-groom">🪐 கிரக நிலை அட்டவணை</a>
-        <a href="#sec-groom">📜 10 துறை பலன்கள்</a>
-        <a href="#sec-groom">⏳ தசா & புத்தி</a>
-        <a href="#sec-groom-num">🔢 எண் கணிதம்</a>
-        <a href="#sec-groom-rem">💎 ரத்தின & பரிகாரம்</a>
-      </div>
-    </div>
-    <div class="nav-item">
-      <button class="nav-trigger">👰 மணமகள் <span class="caret">▾</span></button>
-      <div class="nav-dropdown">
-        <a href="#sec-bride">🪐 கிரக நிலை அட்டவணை</a>
-        <a href="#sec-bride">📜 10 துறை பலன்கள்</a>
-        <a href="#sec-bride">⏳ தசா & புத்தி</a>
-        <a href="#sec-bride-num">🔢 எண் கணிதம்</a>
-        <a href="#sec-bride-rem">💎 ரத்தின & பரிகாரம்</a>
-      </div>
-    </div>
-    <div class="nav-item">
-      <button class="nav-trigger">📌 கூடுதல் <span class="caret">▾</span></button>
-      <div class="nav-dropdown">
-        <a href="#sec-muhurtham">💍 முகூர்த்த பரிந்துரை</a>
-        <a href="#sec-lucky">🍀 அதிர்ஷ்ட விவரங்கள்</a>
-        <a href="#sec-profiles">🗂️ சேமிப்புகள் <span class="badge-mini">NEW</span></a>
-      </div>
-    </div>
-    <div class="nav-item" style="margin-left:auto;color:#ffe9b0;font-size:.78rem;padding:0 8px;opacity:.8">
-      ✨ v2.0
-    </div>
+    <a href="#sec-match" class="nav-pill">💑 பொருத்தம்</a>
+    <a href="#sec-panchangam" class="nav-pill">🌞 பஞ்சாங்கம்</a>
+    <a href="#sec-dmy" class="nav-pill">📅 ராசிபலன்</a>
+    <a href="#sec-dosha" class="nav-pill">🛡️ தோஷம்</a>
+    <a href="#sec-muhurtham" class="nav-pill">💍 முகூர்த்தம்</a>
+    <a href="#sec-groom" class="nav-pill">🤵 மணமகன்</a>
+    <a href="#sec-bride" class="nav-pill">👰 மணமகள்</a>
+    <a href="#sec-profiles" class="nav-pill">🗂️ சேமிப்புகள்</a>
   </div>
 </nav>
 
-<!-- Admin Modal -->
 <div class="modal-backdrop" id="adminModal">
   <div class="modal-box">
-    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed #c89223;padding-bottom:8px;margin-bottom:10px">
-      <h3 style="margin:0">🔐 தலைமை நிர்வாகி உள்நுழைவு</h3>
-      <button type="button" id="closeModalBtn" class="sec" style="padding:3px 10px;font-size:.8rem">✕</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed var(--border);padding-bottom:10px;margin-bottom:14px">
+      <h3 style="margin:0">🔐 தலைமை நிர்வாகி</h3>
+      <button type="button" id="closeModalBtn" class="sec" style="padding:4px 10px;font-size:.85rem;border-radius:8px">✕</button>
     </div>
-    <p style="font-size:.83rem;color:#5a2310;margin:4px 0 10px">அனைத்து பயனர்களின் உலகளாவிய ஜாதகப் பதிவுகளைப் பார்வையிட, தேட, பொருத்த மற்றும் திருத்த நிர்வாகி கணக்கில் உள்நுழையவும்.</p>
+    <p style="font-size:.85rem;color:var(--ink);margin:0 0 12px;opacity:.8">உலகளாவிய ஜாதகப் பதிவுகளை நிர்வகிக்க உள்நுழையவும்.</p>
     <label>பயனர் பெயர்</label>
     <input id="adm_user" placeholder="admin" autocomplete="off">
     <label>கடவுச்சொல்</label>
     <input id="adm_pass" type="password" placeholder="••••••••">
-    <div id="adm_err" class="no" style="font-size:.8rem;margin-top:6px"></div>
-    <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end">
-      <button type="button" id="admLogoutBtn" class="sec" style="display:none">வெளியேறு</button>
-      <button type="button" id="admLoginSubmit">உள்நுழை</button>
+    <div id="adm_err" class="no" style="font-size:.8rem;margin-top:8px"></div>
+    <div style="display:flex;gap:10px;margin-top:18px;justify-content:flex-end">
+      <button type="button" id="admLogoutBtn" class="sec" style="display:none;padding:8px 16px;font-size:.9rem">வெளியேறு</button>
+      <button type="button" id="admLoginSubmit" style="padding:8px 20px;font-size:.9rem">உள்நுழை</button>
     </div>
   </div>
 </div>
@@ -425,75 +418,75 @@ details.astro-cfg summary::-webkit-details-marker{display:none}
 <div class="wrap">
   <details class="astro-cfg">
     <summary>
-      <span>⚙️ ஜோதிட நிலைய தலைப்பு & PDF முத்திரை அமைப்புகள்</span>
-      <span style="font-size:.78rem;color:#7a5a40">மாற்ற கிளிக் செய்க</span>
+      <span>⚙️ ஜோதிட நிலைய தலைப்பு & PDF அமைப்புகள்</span>
+      <span style="font-size:.8rem;opacity:.7">மாற்ற கிளிக் செய்க</span>
     </summary>
-    <div class="grid3" style="margin-top:8px">
+    <div class="grid3" style="margin-top:16px">
       <div><label>மங்கள வாசகம்</label><input id="cfg_mantra" value="முருகன் துணை"></div>
-      <div><label>ஜோதிட நிலையப் பெயர்</label><input id="cfg_center" value="இணையவழி திருக்கணித ஜோதிடம்"></div>
-      <div><label>ஜோதிடர் பெயர் & முகவரி</label><input id="cfg_astro" value="இணையவழி ஜோதிடர்"></div>
+      <div><label>நிலையப் பெயர்</label><input id="cfg_center" value="இணையவழி திருக்கணித ஜோதிடம்"></div>
+      <div><label>ஜோதிடர் பெயர்</label><input id="cfg_astro" value="இணையவழி ஜோதிடர்"></div>
     </div>
-    <div class="grid" style="margin-top:6px">
+    <div class="grid" style="margin-top:12px">
       <div><label>ஆசீர்வாதக் குறிப்பு</label><input id="cfg_bless" value="பதினாறும் பெற்று பெருவாழ்வு வாழ்க! குலதெய்வ அருளும் குருவருளும் என்றும் துணை நிற்கட்டும்."></div>
       <div><label>கையொப்பம்</label><input id="cfg_sign" value="தலைமை ஜோதிடர் · இணையவழி ஜோதிட நிலையம்"></div>
     </div>
   </details>
 
-  <div id="editBanner" class="ornate-box" style="display:none;border-color:#0b6e29;background:#e9faee;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
-    <div><b style="color:#0b6e29">✏️ சுயவிவரத் திருத்த முறை:</b> <span id="editBannerTxt" style="font-size:.88rem"></span></div>
-    <button type="button" id="cancelEditBtn" class="sec" style="padding:5px 12px;font-size:.8rem">✕ ரத்து செய்</button>
+  <div id="editBanner" class="ornate-box" style="display:none;border-color:var(--ok);background:rgba(11,110,41,.05);align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+    <div><b style="color:var(--ok)">✏️ சுயவிவரத் திருத்தம்:</b> <span id="editBannerTxt" style="font-size:.9rem;margin-left:6px"></span></div>
+    <button type="button" id="cancelEditBtn" class="sec" style="padding:6px 14px;font-size:.85rem">✕ ரத்து செய்</button>
   </div>
 
   <div class="grid" id="form"></div>
 
   <div class="btn-row">
-    <button id="gb">🔮 பொருத்தம் & முழு ஜாதகம் பார்க்க</button>
-    <button id="newProfileBtn" class="sec" type="button">➕ புதிய சுயவிவரம்</button>
+    <button id="gb">🔮 பொருத்தம் பார்க்க</button>
+    <button id="newProfileBtn" class="sec" type="button">➕ புதியது</button>
     <button id="updateProfileBtn" class="ok-btn" style="display:none" type="button">💾 புதுப்பி</button>
     <button id="sampleBtn" class="sec" type="button">✨ மாதிரி</button>
-    <button id="pb" class="gold-btn" style="display:none" type="button">📄 A4 PDF</button>
+    <button id="pb" style="display:none" type="button">📄 A4 PDF</button>
   </div>
-  <div class="note" style="text-align:center">
+  <div class="note" style="text-align:center;margin-bottom:20px">
     💡 <b>குறிப்பு:</b> பிறந்த நேரம் இந்திய நேரப்படி (IST) கணக்கிடப்படும்.
   </div>
 
   <div class="cloud-panel" id="sec-profiles">
     <div class="cloud-head">
       <div>
-        <h3 style="margin:0;font-size:1.1rem" id="panelTitle">🗂️ சேமிக்கப்பட்ட சுயவிவரங்கள்</h3>
-        <small id="cloudStatus" style="color:#66462c">உங்கள் உலாவியில் சேமிக்கப்பட்ட சுயவிவரங்கள்</small>
+        <h3 style="margin:0;font-size:1.15rem" id="panelTitle">🗂️ சேமிக்கப்பட்ட சுயவிவரங்கள்</h3>
+        <small id="cloudStatus" style="color:#66462c">உங்கள் உலாவியில் சேமிக்கப்பட்டவை</small>
       </div>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
         <span id="modeBadge" class="badge">👤 பயனர் முறை</span>
         <span id="cloudCountBadge" class="badge ok-b">0 பதிவுகள்</span>
       </div>
     </div>
 
     <div class="filter-bar">
-      <input id="searchBox" placeholder="🔍 பெயர், ஊர், நட்சத்திரம், ராசி...">
+      <input id="searchBox" placeholder="🔍 தேடுக (பெயர், ஊர், ராசி)...">
       <select id="filterRasi"><option value="">அனைத்து ராசிகள்</option></select>
       <select id="filterScore">
         <option value="0">அனைத்து மதிப்பெண்கள்</option>
         <option value="8">8+ (உத்தமம்)</option>
         <option value="6">6+ (மத்திமம்)</option>
       </select>
-      <button type="button" id="clearFilterBtn" class="sec" style="padding:8px 14px;font-size:.83rem">மீட்டமை</button>
+      <button type="button" id="clearFilterBtn" class="sec" style="padding:10px 16px;font-size:.85rem">மீட்டமை</button>
     </div>
 
     <div id="cloudList" class="cloud-list"><div class="note">சேமிக்கப்பட்ட பதிவுகள் இங்கே தோன்றும்...</div></div>
   </div>
 
   <datalist id="cl"></datalist>
-  <div id="msg" class="no" style="margin-top:8px;text-align:center"></div>
+  <div id="msg" class="no" style="margin-top:10px;text-align:center"></div>
 
   <div id="quickNav" class="rep-nav" style="display:none">
     <a href="#sec-match">💑 பொருத்தம்</a>
     <a href="#sec-panchangam">🌞 பஞ்சாங்கம்</a>
     <a href="#sec-dmy">📅 ராசிபலன்</a>
     <a href="#sec-dosha">🛡️ தோஷம்</a>
+    <a href="#sec-muhurtham">💍 முகூர்த்தம்</a>
     <a href="#sec-groom">🤵 மணமகன்</a>
     <a href="#sec-bride">👰 மணமகள்</a>
-    <a href="#sec-muhurtham">💍 முகூர்த்தம்</a>
   </div>
 
   <div id="report" style="display:none"></div>
@@ -508,7 +501,6 @@ const PS=['சூ','சந்','செ','பு','கு','சு','சனி','
 
 RS.forEach(r=>{$('#filterRasi').innerHTML+=`<option value="${r}">${r}</option>`;});
 
-/* Theme toggle */
 const themeBtn = document.getElementById('themeBtn');
 const savedTheme = localStorage.getItem('iw_theme') || 'light';
 document.body.setAttribute('data-theme', savedTheme);
@@ -530,13 +522,13 @@ $('#cl').innerHTML=Object.keys(CITY).map(k=>`<option value="${k}">`).join('');
       <div class="card-title">
         <div class="role-avatar">
           <div class="role-icon">${i===0?'🤵':'👰'}</div>
-          <div><h3 style="margin:0">${r}</h3><small style="color:#7a5432;font-weight:600">${i===0?'வரன் பிறந்த குறிப்புகள்':'மணமகள் பிறந்த குறிப்புகள்'}</small></div>
+          <div><h3 style="margin:0;font-size:1.1rem">${r}</h3><small style="color:#7a5432;font-weight:600">${i===0?'வரன் விவரங்கள்':'மணமகள் விவரங்கள்'}</small></div>
         </div>
         <span class="badge ${i===0?'':'ok-b'}">${i===0?'வரன்':'மணமகள்'}</span>
       </div>
       <label>பெயர்</label>
       <input id="n${i}" placeholder="${i===0?'கார்த்திகேயன்':'மீனாட்சி'}">
-      <div class="grid" style="gap:10px">
+      <div class="grid" style="gap:12px">
         <div><label>பிறந்த தேதி</label><input type="date" id="d${i}"></div>
         <div><label>பிறந்த நேரம் (IST)</label><input type="time" id="t${i}" value="06:30"></div>
       </div>
@@ -583,10 +575,9 @@ function loveMatch(b,g){
   const venDiff=Math.abs(sg(b.sid[5])-sg(g.sid[5])),moonDiff=(b.rs-g.rs+12)%12+1;
   const venGood=[0,2,3,4,6,8,9,10].includes(venDiff),moonGood=[1,3,4,5,7,9,10,11].includes(moonDiff);
   const score=Math.min(98,Math.max(62,72+(venGood?11:0)+(moonGood?10:0)+(nameNum%5)));
-  return{score,nameNum,venGood,moonGood,text:'இருவரின் சுக்கிரன் மற்றும் சந்திரன் நிலைகளால் இயற்கையான அன்பும் புரிதலும் நீடிக்கும். காதல் மற்றும் இல்லற வாழ்வில் ஒருவருக்கொருவர் விட்டுக்கொடுத்துச் செல்லும் மனப்பான்மை மிகுந்திருக்கும்.'};
+  return{score,nameNum,venGood,moonGood,text:'இருவரின் சுக்கிரன் மற்றும் சந்திரன் நிலைகளால் இயற்கையான அன்பும் புரிதலும் நீடிக்கும்.'};
 }
 
-/* NEW: Numerology */
 function numerology(p, name){
   let sum=0;for(const ch of (name||''))sum+=ch.charCodeAt(0);
   const nameNum=((sum-1)%9)+1;
@@ -596,13 +587,12 @@ function numerology(p, name){
   let total=d+mo+y;while(total>9)total=String(total).split('').reduce((a,x)=>a+ +x,0);
   const destNum=total;
   const luckyNums=[...new Set([nameNum,birthNum,destNum,((nameNum+birthNum-1)%9)+1])];
-  const NUM_TA={1:'சூரியன் - தலைமை, தன்னம்பிக்கை',2:'சந்திரன் - மென்மை, கற்பனை',3:'குரு - ஞானம், விரிவு',4:'ராகு - புதுமை, சவால்',5:'புதன் - புத்தி, வணிகம்',6:'சுக்கிரன் - அழகு, கலை',7:'கேது - ஆன்மிகம், தேடல்',8:'சனி - பொறுமை, உழைப்பு',9:'செவ்வாய் - வீரம், ஆற்றல்'};
+  const NUM_TA={1:'சூரியன் - தலைமை',2:'சந்திரன் - மென்மை',3:'குரு - ஞானம்',4:'ராகு - புதுமை',5:'புதன் - புத்தி',6:'சுக்கிரன் - அழகு',7:'கேது - ஆன்மிகம்',8:'சனி - பொறுமை',9:'செவ்வாய் - வீரம்'};
   return{nameNum,birthNum,destNum,luckyNums,desc:NUM_TA[nameNum]||''};
 }
 
-/* NEW: Gemstones & Remedies */
 const GEMSTONE={
-  0:{main:'சிவப்பு மாணிக்கம் (Ruby)',sub:'செம்பு · தங்கம் · ஞாயிறு',mantra:'ஓம் ஹ்ராம் ஹ்ரீம் ஹ்ரௌம் ஸஹ ஸூர்யாய நமஹ'},
+  0:{main:'சிவப்பு மாணிக்கம்',sub:'செம்பு · தங்கம் · ஞாயிறு',mantra:'ஓம் ஹ்ராம் ஹ்ரீம் ஹ்ரௌம் ஸஹ ஸூர்யாய நமஹ'},
   1:{main:'வைரம் / வெண் முத்து',sub:'வெள்ளி · திங்கள்',mantra:'ஓம் ஸ்ராம் ஸ்ரீம் ஸ்ரௌம் ஸஹ சந்த்ராய நமஹ'},
   2:{main:'சிவப்பு பவளம்',sub:'செம்பு · செவ்வாய்',mantra:'ஓம் க்ராம் க்ரீம் க்ரௌம் ஸஹ பூமிபுத்ராய நமஹ'},
   3:{main:'மரகதம் (Emerald)',sub:'தங்கம் · புதன்',mantra:'ஓம் ப்ராம் ப்ரீம் ப்ரௌம் ஸஹ புத்ராய நமஹ'},
@@ -613,23 +603,21 @@ const GEMSTONE={
   8:{main:'வைரம் / வெண் பவளம்',sub:'வெள்ளி · கேது',mantra:'ஓம் ஸ்ராம் ஸ்ரீம் ஸ்ரௌம் ஸஹ கேதவே நமஹ'}
 };
 
-/* NEW: Lucky attributes per rasi */
 const LUCKY_ATTR=[
   {day:'ஞாயிறு',dir:'கிழக்கு',color:'சிவப்பு/மஞ்சள்',num:[1,4,7],time:'காலை 6-8',deity:'சூரிய பகவான்'},
-  {day:'வெள்ளி',dir:'தென்கிழக்கு',color:'வெள்ளை/இளஞ்சிவப்பு',num:[2,6,8],time:'காலை 7-9',deity:'மகாலட்சுமி'},
+  {day:'வெள்ளி',dir:'தென்கிழக்கு',color:'வெள்ளை',num:[2,6,8],time:'காலை 7-9',deity:'மகாலட்சுமி'},
   {day:'புதன்',dir:'வடக்கு',color:'பச்சை',num:[5,3,9],time:'காலை 9-11',deity:'விஷ்ணு'},
   {day:'திங்கள்',dir:'வடக்கு',color:'வெள்ளை/பால்',num:[2,7,9],time:'காலை 6-8',deity:'பார்வதி'},
   {day:'ஞாயிறு',dir:'கிழக்கு',color:'செம்மஞ்சள்',num:[1,3,9],time:'காலை 7-9',deity:'சிவபெருமான்'},
   {day:'புதன்',dir:'வடக்கு',color:'பச்சை',num:[5,6,8],time:'காலை 8-10',deity:'விநாயகர்'},
-  {day:'வெள்ளி',dir:'மேற்கு',color:'வெள்ளை/வெளிர் நீலம்',num:[6,5,8],time:'மாலை 4-6',deity:'மீனாட்சி'},
+  {day:'வெள்ளி',dir:'மேற்கு',color:'வெள்ளை',num:[6,5,8],time:'மாலை 4-6',deity:'மீனாட்சி'},
   {day:'செவ்வாய்',dir:'தெற்கு',color:'சிவப்பு',num:[8,9,1],time:'காலை 6-8',deity:'முருகன்'},
   {day:'வியாழன்',dir:'வடகிழக்கு',color:'மஞ்சள்',num:[3,7,9],time:'காலை 7-9',deity:'தட்சிணாமூர்த்தி'},
-  {day:'சனி',dir:'மேற்கு',color:'கருப்பு/நீலம்',num:[8,5,6],time:'இரவு 8-10',deity:'சனிபகவான்'},
-  {day:'சனி',dir:'மேற்கு',color:'கருப்பு/நீலம்',num:[4,8,7],time:'மாலை 6-8',deity:'ஐயப்பன்'},
-  {day:'வியாழன்',dir:'வடகிழக்கு',color:'மஞ்சள்/கடல் நீலம்',num:[3,7,9],time:'காலை 6-9',deity:'தத்தாத்ரேயர்'}
+  {day:'சனி',dir:'மேற்கு',color:'கருப்பு',num:[8,5,6],time:'இரவு 8-10',deity:'சனிபகவான்'},
+  {day:'சனி',dir:'மேற்கு',color:'கருப்பு',num:[4,8,7],time:'மாலை 6-8',deity:'ஐயப்பன்'},
+  {day:'வியாழன்',dir:'வடகிழக்கு',color:'மஞ்சள்',num:[3,7,9],time:'காலை 6-9',deity:'தத்தாத்ரேயர்'}
 ];
 
-/* NEW: Panchangam */
 const TITHI_NAMES=['பிரதமை','துவிதியை','திருதியை','சதுர்த்தி','பஞ்சமி','சஷ்டி','சப்தமி','அஷ்டமி','நவமி','தசமி','ஏகாதசி','துவாதசி','திரயோதசி','சதுர்தசி','பௌர்ணமி/அமாவாசை'];
 const WEEKDAYS_TA=['ஞாயிறு','திங்கள்','செவ்வாய்','புதன்','வியாழன்','வெள்ளி','சனி'];
 const YOGA_NAMES=['விஷ்கம்பம்','பிரீதி','ஆயுஷ்மான்','சௌபாக்கியம்','சோபனம்','அதிகண்டம்','சுகர்மம்','துருதி','சூலம்','கண்டம்','விருத்தி','துருவம்','வியாகதம்','ஹர்ஷணம்','வஜ்ரம்','சித்தி','வியதிபாதம்','வரியான்','பரிகம்','சிவம்','சித்தம்','சாத்தியம்','சுபம்','சுக்லம்','பிரம்மம்','ஐந்திரம்','வைதிருதி'];
@@ -648,7 +636,6 @@ function panchangam(){
   return{weekday,tithiName,paksha,nakshatra:NK[nkIdx],yoga:YOGA_NAMES[yogaIdx],sunRasi,moonRasi,date:now};
 }
 
-/* NEW: Nadi dosha */
 function nadiCheck(p){
   const nkNum=p.nk+1;
   let nadi;
@@ -659,19 +646,18 @@ function nadiCheck(p){
 }
 const NADI_NAMES=['ஆதி நாடி','மத்திய நாடி','அந்திய நாடி'];
 
-/* NEW: Muhurtham suggestion */
 function muhurthamSuggestion(p1,p2){
   const now=new Date(),results=[];
   for(let m=0;m<12;m++){
     const d=new Date(now.getFullYear(),now.getMonth()+m,15);
     const J=d.getTime()/864e5+2440587.5,o=pos(J,null);
-    const jupR=sg(o.sid[4]),venR=sg(o.sid[5]),sunR=sg(o.sid[0]);
+    const jupR=sg(o.sid[4]),venR=sg(o.sid[5]);
     const j1=(jupR-p1.rs+12)%12+1,j2=(jupR-p2.rs+12)%12+1;
     const v1=(venR-p1.rs+12)%12+1,v2=(venR-p2.rs+12)%12+1;
     const jScore=(GOOD[4].includes(j1)?1:0)+(GOOD[4].includes(j2)?1:0);
     const vScore=(GOOD[5].includes(v1)?1:0)+(GOOD[5].includes(v2)?1:0);
     const total=jScore+vScore;
-    if(total>=2)results.push({month:TAMIL_MONTHS[sunR],date:d,score:total,jupR:RS[jupR],venR:RS[venR]});
+    if(total>=2)results.push({month:TAMIL_MONTHS[sg(o.sid[0])],date:d,score:total,jupR:RS[jupR],venR:RS[venR]});
   }
   return results.slice(0,5);
 }
@@ -684,12 +670,13 @@ function checkDosha(p){
   const fromLag=doshaHouses.includes(hLag),fromMoon=doshaHouses.includes(hMoon),fromVen=doshaHouses.includes(hVen);
   const exReasons=[];
   if([0,7,9].includes(marsR))exReasons.push('செவ்வாய் ஆட்சி/உச்சம்');
-  if([4,10].includes(marsR))exReasons.push('சிம்மம்/கும்பத்தில் தோஷமில்லை');
+  if([4,10].includes(marsR))exReasons.push('சிம்மம்/கும்பம்');
   if([0,4,6,8].includes((marsR-jupR+12)%12))exReasons.push('குரு பார்வை');
   if([3,4].includes(lagR))exReasons.push('யோகாதிபதி');
   let sevLevel=0;
   if(fromLag||fromMoon||fromVen)sevLevel=exReasons.length>0?1:2;
-  const rkL_R=(rahuR-lagR+12)%12+1,rkL_K=(ketuR-lagR+12)%12+1,rkM_R=(rahuR-moonR+12)%12+1,rkM_K=(ketuR-moonR+12)%12+1;
+  const rkL_R=(rahuR-lagR+12)%12+1,rkL_K=(ketuR-lagR+12)%12+1;
+  const rkM_R=(rahuR-moonR+12)%12+1,rkM_K=(ketuR-moonR+12)%12+1;
   const rkHouses=[1,2,5,7,8];
   const nagaLag=rkHouses.includes(rkL_R)||rkHouses.includes(rkL_K);
   const nagaMoon=rkHouses.includes(rkM_R)||rkHouses.includes(rkM_K);
@@ -718,8 +705,8 @@ function doshaMatchSummary(dB,dG){
 }
 
 const LI=[8,5,0,1,2,7,4,6,3],YR=[7,20,6,10,7,18,16,19,17];
-const PR={0:['தலைமைப் பண்பு, தன்மானம்','ஈகோ தவிர்த்து இல்லறம் இனிக்கும்','அரசு பணி, நிர்வாகம்','தந்தை ஆதரவு; கண்/தலை கவனம்','50க்குப்பின் கௌரவப் பதவி'],1:['மென்மை, கற்பனை, அன்பு','காதல் கைகூடும்','பயணம், உணவு, கலை','தாயார் ஆசி; சளி கவனம்','அழகிய வீடு, வாகனம்'],2:['துணிச்சல், வேகம்','கோபம் குறைத்தால் இனிக்கும்','பூமி, கட்டிடம், ராணுவம்','சகோதர ஆதரவு; ரத்த அழுத்தம் கவனம்','நிலம், சொந்த வீடு'],7:['புதுமை, திடீர் முன்னேற்றம்','உறவில் பொறுமை','ஐடி, வெளிநாடு, ஏற்றுமதி','இடமாற்றம்; ஒவ்வாமை கவனம்','வெளிநாட்டு யோகம், கார்'],4:['ஞானம், தர்மம்','சிறந்த துணை','கல்வி, வங்கி, சட்டம்','சுபகாரியம்; கல்லீரல் கவனம்','பொன்-பொருள் சேர்க்கை'],6:['பொறுமை, கடின உழைப்பு','நிதானமான திருமணம்','தொழிற்சாலை, சேவை','தாமதமாக வெற்றி','நிலையான நிம்மதி'],3:['புத்தி, பேச்சு','நட்பு வழி அன்பு','வணிகம், ஐடி, ஊடகம்','கல்வி மேன்மை','வர்த்தக வெற்றி'],8:['ஆன்மிக நாட்டம்','ஆன்மிகப் புரிதல்','மருத்துவம், ஆராய்ச்சி','எளிமையான வாழ்வு','ஞானம் & அமைதி'],5:['கலை ஆர்வம், அழகு','காதல் யோகம் உச்சம்','ஆடை, சினிமா, வாகனம்','சுப செலவுகள்','ஆடம்பர வீடு, கார்']};
-const BH_PR={0:'அதிகாரம், அரசு ஆதரவு, கௌரவம் உயரும்.',1:'மன மகிழ்ச்சி, சுபப் பயணம், குடும்ப சுபம்.',2:'வீடு/மனை யோகம், வேகமான வெற்றி.',3:'கல்வி, வியாபாரம், புதிய ஒப்பந்தங்கள்.',4:'திருமணம், புத்திர பாக்கியம், பதவி உயர்வு.',5:'வாகன யோகம், வீடு புதுப்பித்தல், செல்வம்.',6:'உழைப்பிற்கு ஏற்ற பலன், தொழில் விரிவாக்கம்.',7:'வெளிநாட்டு வாய்ப்பு, குலதெய்வ வழிபாடு.',8:'ஆன்மிக யாத்திரை, விநாயகர் வழிபாடு.'};
+const PR={0:['தலைமைப் பண்பு','ஈகோ தவிர்த்து இல்லறம்','அரசு பணி, நிர்வாகம்','தந்தை ஆதரவு','50க்குப்பின் கௌரவம்'],1:['மென்மை, அன்பு','காதல் கைகூடும்','பயணம், உணவு, கலை','தாயார் ஆசி','அழகிய வீடு'],2:['துணிச்சல், வேகம்','கோபம் குறைக்கவும்','பூமி, கட்டிடம்','சகோதர ஆதரவு','நிலம், சொந்த வீடு'],7:['புதுமை, திடீர் வளர்ச்சி','உறவில் பொறுமை','ஐடி, வெளிநாடு','இடமாற்றம்','வெளிநாட்டு யோகம்'],4:['ஞானம், தர்மம்','சிறந்த துணை','கல்வி, வங்கி','சுபகாரியம்','பொன்-பொருள் சேர்க்கை'],6:['பொறுமை, உழைப்பு','நிதானமான திருமணம்','தொழிற்சாலை','தாமதமாக வெற்றி','நிலையான நிம்மதி'],3:['புத்தி, பேச்சு','நட்பு வழி அன்பு','வணிகம், ஐடி','கல்வி மேன்மை','வர்த்தக வெற்றி'],8:['ஆன்மிக நாட்டம்','ஆன்மிகப் புரிதல்','மருத்துவம், ஆராய்ச்சி','எளிமையான வாழ்வு','ஞானம் & அமைதி'],5:['கலை ஆர்வம்','காதல் யோகம் உச்சம்','ஆடை, சினிமா','சுப செலவுகள்','ஆடம்பர வீடு']};
+const BH_PR={0:'அதிகாரம், அரசு ஆதரவு உயரும்.',1:'மன மகிழ்ச்சி, சுபப் பயணம், குடும்ப சுபம்.',2:'வீடு/மனை யோகம், வேகமான வெற்றி.',3:'கல்வி, வியாபாரம், புதிய ஒப்பந்தங்கள்.',4:'திருமணம், புத்திர பாக்கியம், பதவி உயர்வு.',5:'வாகன யோகம், வீடு புதுப்பித்தல், செல்வம்.',6:'உழைப்பிற்கு ஏற்ற பலன், தொழில் விரிவாக்கம்.',7:'வெளிநாட்டு வாய்ப்பு, குலதெய்வ வழிபாடு.',8:'ஆன்மிக யாத்திரை, விநாயகர் வழிபாடு.'};
 const FL=['குணம்','காதல்','தொழில்','குடும்பம்','50க்குப்பின்'];
 const GOOD={0:[3,6,10,11],1:[1,3,6,7,10,11],2:[3,6,11],3:[2,4,6,8,10,11],4:[2,5,7,9,11],5:[1,2,3,4,5,8,9,11,12],6:[3,6,11],7:[3,6,11],8:[3,6,11]};
 const EX=[0,1,9,5,3,11,6],OW=[[4],[3],[0,7],[2,5],[8,11],[1,6],[9,10]];
@@ -776,23 +763,23 @@ function lifeSummary(p,dsh){
   const lagR=sg(p.lag),moonR=p.rs;
   const lagLord=PN[LORD[lagR]],moonLord=PN[LORD[moonR]];
   return[
-    ['👤 குணம் & ஆளுமை',`${RS[lagR]} லக்னம் (${lagLord}), ${RS[moonR]} ராசி (${moonLord}) - நேர்மை, தன்னம்பிக்கை, குடும்பப் பொறுப்புணர்வு.`],
+    ['👤 குணம்',`${RS[lagR]} லக்னம் (${lagLord}), ${RS[moonR]} ராசி (${moonLord}) - நேர்மை, தன்னம்பிக்கை.`],
     ['❤️ காதல்',`சுக்கிரன்-சந்திரன் தொடர்பால் அன்பான மனம், உண்மையான பாசம்.`],
-    ['💍 திருமணம்',`7-ம் அதிபதி ${PN[dsh.bhava.h7Lord]} பலத்தால் அன்பான துணை, திருமணத்திற்குப் பின் பொருளாதார உயர்வு.`],
+    ['💍 திருமணம்',`7-ம் அதிபதி ${PN[dsh.bhava.h7Lord]} பலத்தால் அன்பான துணை.`],
     ['💼 தொழில்',`10-ம் அதிபதி ${PN[LORD[(lagR+9)%12]]} நிலையால் படிப்படியான வளர்ச்சி.`],
     ['🏛️ உத்தியோகம்',`உழைப்பால் உயர் பதவி, வெளிநாட்டு தொடர்பால் ஆதாயம்.`],
     ['👨‍👩‍👧‍👦 குடும்பம்',`2/4 பாவ பலத்தால் சுபகாரியங்கள், குலதெய்வ அருள்.`],
     ['👶 புத்திர பாக்கியம்',`5-ம் அதிபதி ${PN[dsh.bhava.h5Lord]} அருளால் அறிவுமிக்க குழந்தைகள்.`],
-    ['🩺 ஆரோக்கியம்',`லக்னாதிபதி ${lagLord} பலத்தால் நல்ல நோய் எதிர்ப்பு சக்தி.`],
-    ['🏡 வீடு, வாகனம்',`4-ம் அதிபதி ${PN[LORD[(lagR+3)%12]]} பலத்தால் சொந்த வீடு, கார் யோகம்.`],
-    ['🌟 50க்குப்பின்',`பொருளாதார தன்னிறைவு, சமுதாய கௌரவம், நிம்மதியான பெருவாழ்வு.`]
+    ['🩺 ஆரோக்கியம்',`லக்னாதிபதி ${lagLord} பலத்தால் நல்ல நோய் எதிர்ப்பு.`],
+    ['🏡 வீடு, வாகனம்',`4-ம் அதிபதி ${PN[LORD[(lagR+3)%12]]} பலத்தால் வீடு, கார் யோகம்.`],
+    ['🌟 50க்குப்பின்',`பொருளாதார தன்னிறைவு, சமுதாய கௌரவம், நிம்மதி.`]
   ];
 }
 
 const TAMIL_MONTHS=['சித்திரை','வைகாசி','ஆனி','ஆடி','ஆவணி','புரட்டாசி','ஐப்பசி','கார்த்திகை','மார்கழி','தை','மாசி','பங்குனி'];
 const LUCKY_COLORS=['பொன் மஞ்சள்','பவளச் சிவப்பு','மரகதப் பச்சை','வெண்மை','இளநீலம்','செந்தூரம்','இளஞ்சிவப்பு','தங்க நிறம்','வெளிர் மஞ்சள்','மயில் நீலம்','வெள்ளி நிறம்','குங்குமச் சிவப்பு'];
 const DEITIES=['திருச்செந்தூர் முருகன்','மதுரை மீனாட்சி','திருப்பதி பெருமாள்','பழனி தண்டாயுதபாணி','தில்லை நடராஜர்','காஞ்சி காமாட்சி','ஸ்ரீரங்கம் ரங்கநாதர்','வைத்தீஸ்வரன் முருகன்','தஞ்சை பிரகதீஸ்வரர்','சுவாமிமலை முருகன்','திருவண்ணாமலை அண்ணாமலையார்','இராமேஸ்வரம் இராமநாதர்'];
-const DAILY_BHAVA_TXT={1:'உற்சாகம், தெளிவு. புதிய முயற்சிகளில் வெற்றி, நற்செய்திகள்.',2:'தனவரவு தாராளம். குடும்ப சுப பேச்சுவார்த்தைகள் கைகூடும்.',3:'தைரியம் கூடும். சகோதர ஆதரவு, குறுகிய பயண ஆதாயம்.',4:'தாயார் வழி மகிழ்ச்சி, வீடு-வாகன நன்மை, மன அமைதி.',5:'புத்திர வழி மகிழ்ச்சி, பூர்வீக புண்ணிய பலன், குலதெய்வ அருள்.',6:'எதிர்ப்புகள் விலகும், கடன் குறையும், உத்தியோகத்தில் கை ஓங்கும்.',7:'துணையுடன் அந்நியோன்யம், நண்பர்கள்/கூட்டு தொழிலில் லாபம்.',8:'சந்திராஷ்டமம்: புதிய ஒப்பந்தங்களைத் தவிர்க்கவும், நிதானம்.',9:'பாக்கிய ஸ்தான பலம், தெய்வ தரிசனம், தூர நற்செய்திகள்.',10:'உயர் அதிகாரிகளின் பாராட்டு, சமூக மதிப்பு உயரும்.',11:'லாப ஸ்தான பலம், பணவரவு, மன விருப்பம் நிறைவேறும்.',12:'சுப விரயங்கள், கோவில் திருப்பணி செலவுகள்.'};
+const DAILY_BHAVA_TXT={1:'உற்சாகம், தெளிவு. புதிய முயற்சிகளில் வெற்றி.',2:'தனவரவு தாராளம். குடும்ப சுப பேச்சுவார்த்தைகள்.',3:'தைரியம் கூடும். சகோதர ஆதரவு.',4:'தாயார் வழி மகிழ்ச்சி, வீடு-வாகன நன்மை.',5:'புத்திர வழி மகிழ்ச்சி, குலதெய்வ அருள்.',6:'எதிர்ப்புகள் விலகும், உத்தியோகத்தில் கை ஓங்கும்.',7:'துணையுடன் அந்நியோன்யம், நண்பர்கள் லாபம்.',8:'சந்திராஷ்டமம்: நிதானமாக செயல்படவும்.',9:'பாக்கிய ஸ்தான பலம், தெய்வ தரிசனம்.',10:'உயர் அதிகாரிகளின் பாராட்டு, சமூக மதிப்பு.',11:'லாப ஸ்தான பலம், பணவரவு, விருப்பம் நிறைவேறும்.',12:'சுப விரயங்கள், கோவில் திருப்பணி செலவுகள்.'};
 
 function calcDMY(p){
   const now=new Date(),Jnow=now.getTime()/864e5+2440587.5;
@@ -802,10 +789,10 @@ function calcDMY(p){
   const tara=(trMoonNk-p.nk+27)%9+1,taraGood=[1,2,4,6,8,9].includes(tara);
   const luckyNum=((mr+now.getDate())%9)+1;
   const sunR=sg(tr[0]),tMonth=TAMIL_MONTHS[sunR],mHouse=(sunR-mr+12)%12+1;
-  const venH=(sg(tr[5])-mr+12)%12+1,merH=(sg(tr[3])-mr+12)%12+1,marsH=(sg(tr[2])-mr+12)%12+1;
+  const venH=(sg(tr[5])-mr+12)%12+1,merH=(sg(tr[3])-mr+12)%12+1;
   const monthGood=[3,6,10,11].includes(mHouse);
   const monthFinance=GOOD[5].includes(venH)||GOOD[3].includes(merH)?'பணவரவு, ஆபரண சேர்க்கை, குடும்பத் தேவைகள் பூர்த்தி.':'திட்டமிட்ட செலவு, சேமிப்பில் கவனம்.';
-  const monthCareer=monthGood?`${tMonth} மாதத்தில் சூரியன் ${mHouse}-ம் இடத்தில் - பதவி உயர்வு, அரசு ஆதாயம்.`:`${tMonth} மாதத்தில் சூரியன் ${mHouse}-ம் இடம் - பொறுமையுடன் செயல்படவும்.`;
+  const monthCareer=monthGood?`${tMonth} மாதத்தில் சூரியன் ${mHouse}-ம் இடத்தில் - பதவி உயர்வு.`:`${tMonth} மாதத்தில் சூரியன் ${mHouse}-ம் இடம் - பொறுமை.`;
   const jupR=sg(tr[4]),satR=sg(tr[6]),rahR=sg(tr[7]),ketR=sg(tr[8]);
   const jupH=(jupR-mr+12)%12+1,satH=(satR-mr+12)%12+1,rahH=(rahR-mr+12)%12+1,ketH=(ketR-mr+12)%12+1;
   const jupOk=GOOD[4].includes(jupH),satOk=GOOD[6].includes(satH);
@@ -814,14 +801,14 @@ function calcDMY(p){
   else if(satH===8)sadeSati='அஷ்டமச் சனி - ஆஞ்சநேயர் வழிபாடு';
   else if(satH===4)sadeSati='அர்த்தாஷ்டமச் சனி - நிதானமான முதலீடு';
   const yearSummary=`
-    <b>குரு (${RS[jupR]} - ${jupH}-ம் இடம்):</b> ${jupOk?'திருமணம்/புத்திர பாக்கியம்/தனவரவு யோகம் ✔':'வியாழன் தட்சிணாமூர்த்தி வழிபாடு நன்மை.'}<br>
+    <b>குரு (${RS[jupR]} - ${jupH}-ம் இடம்):</b> ${jupOk?'திருமணம்/தனவரவு யோகம் ✔':'வியாழன் தட்சிணாமூர்த்தி வழிபாடு நன்மை.'}<br>
     <b>சனி (${RS[satR]} - ${satH}-ம் இடம்):</b> ${satOk?'தொழில் ஸ்திரம், சொத்து சேர்க்கை ✔':sadeSati}<br>
-    <b>ராகு (${RS[rahR]} - ${rahH}) & கேது (${RS[ketR]} - ${ketH}):</b> ${GOOD[7].includes(rahH)||GOOD[8].includes(ketH)?'திடீர் அதிர்ஷ்டம், வெளிநாட்டு வாய்ப்பு ✔':'குலதெய்வம்/துர்க்கை வழிபாடு நன்மை.'}
+    <b>ராகு (${RS[rahR]}) & கேது (${RS[ketR]}):</b> ${GOOD[7].includes(rahH)||GOOD[8].includes(ketH)?'திடீர் அதிர்ஷ்டம் ✔':'குலதெய்வ வழிபாடு நன்மை.'}
   `;
   const monthRows=Array.from({length:12},(_,idx)=>{
     const mIdx=(sunR+idx)%12,h=(mIdx-mr+12)%12+1;
     const isBest=[3,6,10,11].includes(h),isGood=[1,2,4,5,7,9].includes(h);
-    const statusTxt=isBest?'அமோக வெற்றி & தனலாபம் ✔':isGood?'சுபம் & குடும்ப மகிழ்ச்சி':'நிதானம் & இறைவழிபாடு';
+    const statusTxt=isBest?'அமோக வெற்றி ✔':isGood?'சுபம்':'நிதானம்';
     const cls=isBest?'ok':isGood?'mid':'no';
     return`<tr><td><b>${TAMIL_MONTHS[mIdx]}</b></td><td>${RS[mIdx]} (${h}-ம்)</td><td class="${cls}">${statusTxt}</td></tr>`;
   }).join('');
@@ -832,7 +819,7 @@ function dmyBlock(p,role){
   const d=calcDMY(p);
   return`<div class="ornate-box" style="margin-bottom:12px">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px">
-      <h3 style="margin:0">${role}: ${p.name} — ${RS[p.rs]} (${NK[p.nk]})</h3>
+      <h3 style="margin:0;font-size:1.05rem">${role}: ${p.name} — ${RS[p.rs]} (${NK[p.nk]})</h3>
       <span class="badge ok-b">${d.deity}</span>
     </div>
     <div class="dmy-grid">
@@ -854,49 +841,41 @@ function dmyBlock(p,role){
   </div>`;
 }
 
-/* NEW: Numerolgy block */
 function numerologyBlock(p, role, secId){
   const nu=numerology(p, p.name);
   const lucky=LUCKY_ATTR[p.rs];
   return`<section id="${secId}" class="pg">
-    <div class="hd"><h2>🔢 ${role} எண் கணிதம் & அதிர்ஷ்ட விவரங்கள்</h2><span class="badge">${p.name}</span></div>
+    <div class="hd"><h2>🔢 ${role} எண் கணிதம் & அதிர்ஷ்டம்</h2><span class="badge">${p.name}</span></div>
     <div class="info-cards">
       <div class="info-card"><small>பெயர் எண்</small><div class="num-big">${nu.nameNum}</div><div style="font-size:.78rem;color:#5a2310">${nu.desc}</div></div>
-      <div class="info-card"><small>பிறப்பு எண்</small><div class="num-big">${nu.birthNum}</div><div style="font-size:.78rem;color:#5a2310">பிறந்த தேதி அடிப்படை</div></div>
-      <div class="info-card"><small>விதி எண்</small><div class="num-big">${nu.destNum}</div><div style="font-size:.78rem;color:#5a2310">முழு பிறந்த தேதி</div></div>
-      <div class="info-card"><small>அதிர்ஷ்ட எண்கள்</small><div class="num-big" style="font-size:1.2rem">${nu.luckyNums.join(' · ')}</div><div style="font-size:.78rem;color:#5a2310">பயன்படுத்தவும்</div></div>
+      <div class="info-card"><small>பிறப்பு எண்</small><div class="num-big">${nu.birthNum}</div><div style="font-size:.78rem;color:#5a2310">பிறந்த தேதி</div></div>
+      <div class="info-card"><small>விதி எண்</small><div class="num-big">${nu.destNum}</div><div style="font-size:.78rem;color:#5a2310">முழு தேதி</div></div>
+      <div class="info-card"><small>அதிர்ஷ்ட எண்கள்</small><div class="num-big" style="font-size:1.2rem">${nu.luckyNums.join(' · ')}</div></div>
     </div>
     <h3 class="sec-sub">🍀 அதிர்ஷ்ட விவரங்கள்</h3>
     <div class="info-cards">
-      <div class="info-card"><small>அதிர்ஷ்ட நாள்</small><div style="font-size:1.05rem;font-weight:700;color:var(--red)">${lucky.day}</div></div>
+      <div class="info-card"><small>நாள்</small><div style="font-size:1.05rem;font-weight:700;color:var(--red)">${lucky.day}</div></div>
       <div class="info-card"><small>திசை</small><div style="font-size:1.05rem;font-weight:700;color:var(--red)">${lucky.dir}</div></div>
       <div class="info-card"><small>நிறம்</small><div style="font-size:1.05rem;font-weight:700;color:var(--red)">${lucky.color}</div></div>
       <div class="info-card"><small>நேரம்</small><div style="font-size:1.05rem;font-weight:700;color:var(--red)">${lucky.time}</div></div>
-      <div class="info-card"><small>வழிபடும் தெய்வம்</small><div style="font-size:1.05rem;font-weight:700;color:var(--red)">${lucky.deity}</div></div>
+      <div class="info-card"><small>தெய்வம்</small><div style="font-size:1.05rem;font-weight:700;color:var(--red)">${lucky.deity}</div></div>
     </div>
   </section>`;
 }
 
-/* NEW: Remedies block */
 function remediesBlock(p, role, secId){
   const rasiLord=LORD[p.rs];
   const lagR=sg(p.lag),lagLord=LORD[lagR];
-  const gem=GEMSTONE[rasiLord];
-  const gemLag=GEMSTONE[lagLord];
+  const gem=GEMSTONE[rasiLord],gemLag=GEMSTONE[lagLord];
   return`<section id="${secId}" class="pg">
-    <div class="hd"><h2>💎 ${role} ரத்தினம் & பரிகாரம்</h2><span class="badge">${RS[p.rs]} ராசி · ${RS[lagR]} லக்னம்</span></div>
+    <div class="hd"><h2>💎 ${role} ரத்தினம் & பரிகாரம்</h2><span class="badge">${RS[p.rs]} · ${RS[lagR]}</span></div>
     <div class="info-cards">
-      <div class="info-card"><small>ராசி அதிபதி</small><div style="font-size:1.15rem;font-weight:700;color:var(--red);margin:4px 0">${PN[rasiLord]}</div><div style="font-size:.82rem">ராசிக்கு உகந்த ரத்தினம்</div><div style="font-size:.92rem;font-weight:700;margin-top:4px;color:var(--ok)">💎 ${gem.main}</div><div style="font-size:.75rem;color:#5a2310">${gem.sub}</div><div style="font-size:.78rem;margin-top:6px;font-style:italic">${gem.mantra}</div></div>
-      <div class="info-card"><small>லக்னாதிபதி</small><div style="font-size:1.15rem;font-weight:700;color:var(--red);margin:4px 0">${PN[lagLord]}</div><div style="font-size:.82rem">லக்னத்திற்கு உகந்த ரத்தினம்</div><div style="font-size:.92rem;font-weight:700;margin-top:4px;color:var(--ok)">💎 ${gemLag.main}</div><div style="font-size:.75rem;color:#5a2310">${gemLag.sub}</div><div style="font-size:.78rem;margin-top:6px;font-style:italic">${gemLag.mantra}</div></div>
-      <div class="info-card"><small>பொது பரிகாரங்கள்</small><ul style="margin:4px 0 0 16px;padding:0;font-size:.82rem;line-height:1.6">
-        <li>வாரம் ஒருமுறை குலதெய்வம் தரிசனம்</li>
-        <li>கிழமைக்கு உரிய தெய்வத்திற்கு விளக்கு ஏற்றுதல்</li>
-        <li>தினமும் காயத்ரி மந்திரம் அல்லது இஷ்ட தெய்வ ஜபம்</li>
-        <li>புதன் கிழமை பச்சை பயறு தானம்</li>
-        <li>சனிக்கிழமை எள்/நல்லெண்ணெய் தீபம்</li>
+      <div class="info-card"><small>ராசி அதிபதி</small><div style="font-size:1.15rem;font-weight:700;color:var(--red);margin:4px 0">${PN[rasiLord]}</div><div style="font-size:.92rem;font-weight:700;margin-top:4px;color:var(--ok)">💎 ${gem.main}</div><div style="font-size:.75rem;color:#5a2310">${gem.sub}</div><div style="font-size:.78rem;margin-top:6px;font-style:italic">${gem.mantra}</div></div>
+      <div class="info-card"><small>லக்னாதிபதி</small><div style="font-size:1.15rem;font-weight:700;color:var(--red);margin:4px 0">${PN[lagLord]}</div><div style="font-size:.92rem;font-weight:700;margin-top:4px;color:var(--ok)">💎 ${gemLag.main}</div><div style="font-size:.75rem;color:#5a2310">${gemLag.sub}</div><div style="font-size:.78rem;margin-top:6px;font-style:italic">${gemLag.mantra}</div></div>
+      <div class="info-card"><small>பொது பரிகாரம்</small><ul style="margin:4px 0 0 16px;padding:0;font-size:.82rem;line-height:1.6">
+        <li>குலதெய்வம் தரிசனம்</li><li>கிழமை தெய்வ வழிபாடு</li><li>இஷ்ட தெய்வ ஜபம்</li><li>புதன் பச்சை பயறு தானம்</li><li>சனி நல்லெண்ணெய் தீபம்</li>
       </ul></div>
     </div>
-    <div class="note">⚠️ ரத்தினம் அணியும் முன் அனுபவமிக்க ஜோதிடரை அணுகி, எந்த விரலில் & எந்த மாதம் அணிய வேண்டும் என்பதை உறுதிசெய்யவும்.</div>
   </section>`;
 }
 
@@ -922,8 +901,8 @@ function personSection(p,role,isBreak,secId){
   }).join(' · ');
   const lifeItems=lifeSummary(p,dsh).map(([k,v])=>`<div class="life-item"><b>${k}</b><div style="margin-top:3px">${v}</div></div>`).join('');
   return`<section id="${secId||''}" class="pg ${isBreak?'pg-break':''}">
-    <div class="hd"><h2>${role}: ${p.name||'—'}</h2><span class="badge">${RS[mr]} · ${NK[p.nk]} (பாதம் ${p.pada}) · லக்னம் ${RS[lagR]}</span></div>
-    <div class="ornate-box" style="padding:9px 14px;margin-bottom:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:.86rem">
+    <div class="hd"><h2>${role}: ${p.name||'—'}</h2><span class="badge">${RS[mr]} · ${NK[p.nk]} · லக் ${RS[lagR]}</span></div>
+    <div class="ornate-box" style="padding:12px;margin-bottom:16px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.88rem">
       <span>📅 <b>${fd(p.bd)} (${p.timeStr})</b></span>
       <span>📍 <b>${p.placeStr}</b></span>
       <span>👑 ராசி: <b>${PN[LORD[mr]]}</b> · லக்ன: <b>${PN[LORD[lagR]]}</b></span>
@@ -934,12 +913,12 @@ function personSection(p,role,isBreak,secId){
     </div>
     <h3 class="sec-sub">🪐 நவகிரக நிலை</h3>
     <table><tr><th>கிரகம்</th><th>ராசி</th><th>பாகை</th><th>நட்சத்திரம்</th><th>பாவம்</th><th>பலம்</th><th>தன்மை</th></tr>${pt}</table>
-    <div class="ornate-box" style="margin-top:12px;background:linear-gradient(135deg,var(--gold-light),var(--surface));border:2px solid #7c130d">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
-        <h3 style="margin:0;color:var(--red)">🌟 நடப்பு தசா–புத்தி</h3>
+    <div class="ornate-box" style="margin-top:16px;background:linear-gradient(135deg,var(--gold-light),var(--surface));border:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <h3 style="margin:0;color:var(--red);font-size:1.05rem">🌟 நடப்பு தசா–புத்தி</h3>
         <span class="badge ok-b">${PN[curD.p]} தசா · ${PN[curB.p]} புத்தி (${fd(curB.s)} – ${fd(curB.e)})</span>
       </div>
-      <p style="margin:6px 0 0;font-size:.87rem"><b>பலன்:</b> ${BH_PR[curB.p]}</p>
+      <p style="margin:8px 0 0;font-size:.9rem"><b>பலன்:</b> ${BH_PR[curB.p]}</p>
     </div>
     <h3 class="sec-sub">📜 10 துறை வாழ்க்கை பலன்கள்</h3>
     <div class="life-grid">${lifeItems}</div>
@@ -953,17 +932,17 @@ function personSection(p,role,isBreak,secId){
         return`<div class="bh-item ${bc?'bh-now':''}"><b>${PN[b.p]}:</b> ${fd(b.s)}–${fd(b.e)} ${bc?'★':''}</div>`;
       }).join('');
       return`<div class="dc ${c?'now':''}">
-        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px">
           <b>🪐 ${PN[d.p]} தசா: ${fd(d.s)}–${fd(d.e)} (வயது ${ageS}–${ageE})</b>
           ${c?'<span class="badge ok-b">← நடப்பு</span>':''}
         </div>
-        <div style="margin-top:4px">${PR[d.p].map((t,i)=>`<b>${FL[i]}:</b> ${t}`).join(' · ')}</div>
-        <div style="margin-top:5px;font-weight:700;color:var(--red);font-size:.78rem">உள் புத்திகள்:</div>
+        <div style="margin-top:6px;font-size:.82rem">${PR[d.p].map((t,i)=>`<b>${FL[i]}:</b> ${t}`).join(' · ')}</div>
+        <div style="margin-top:8px;font-weight:700;color:var(--red);font-size:.8rem">உள் புத்திகள்:</div>
         <div class="bhukti-grid">${bhHtml}</div>
       </div>`;
     }).join('')}
-    <h3 class="sec-sub">🔭 இன்றைய கோசாரம் (ராசியிலிருந்து)</h3>
-    <p style="font-size:.84rem;background:var(--gold-light);padding:9px 12px;border:1px solid var(--border);border-radius:6px">${gn}</p>
+    <h3 class="sec-sub">🔭 இன்றைய கோசாரம்</h3>
+    <p style="font-size:.85rem;background:var(--gold-light);padding:12px;border:1px solid var(--border);border-radius:8px">${gn}</p>
     <h3 class="sec-sub">📆 ஆண்டு கோசாரப் பலன்</h3>
     <table><tr><th>கிரகம்</th>${dts.map(d=>`<th>${d}</th>`).join('')}</tr>${gr}</table>
   </section>`;
@@ -971,7 +950,7 @@ function personSection(p,role,isBreak,secId){
 
 function gaugeSvg(pct,color){
   const r=34,c=2*Math.PI*r,off=c-(pct/100)*c;
-  return`<svg class="gauge-svg" viewBox="0 0 84 84"><circle cx="42" cy="42" r="${r}" fill="var(--surface)" stroke="#ead39c" stroke-width="8"/><circle cx="42" cy="42" r="${r}" fill="none" stroke="${color}" stroke-width="8" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" stroke-linecap="round" transform="rotate(-90 42 42)"/><text x="42" y="47" text-anchor="middle" font-family="Noto Serif Tamil,serif" font-size="16" font-weight="700" fill="var(--red)">${pct}%</text></svg>`;
+  return`<svg class="gauge-svg" viewBox="0 0 84 84"><circle cx="42" cy="42" r="${r}" fill="var(--surface)" stroke="var(--border)" stroke-width="8"/><circle cx="42" cy="42" r="${r}" fill="none" stroke="${color}" stroke-width="8" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}" stroke-linecap="round" transform="rotate(-90 42 42)"/><text x="42" y="47" text-anchor="middle" font-family="Noto Serif Tamil,serif" font-size="16" font-weight="700" fill="var(--red)">${pct}%</text></svg>`;
 }
 
 function go(){
@@ -1005,8 +984,6 @@ function go2(){
   const lv=loveMatch(P[0],P[1]);
   const dB=checkDosha(P[0]),dG=checkDosha(P[1]);
   const dSum=doshaMatchSummary(dB,dG);
-
-  // NEW
   const panch=panchangam();
   const nadiB=nadiCheck(P[0]),nadiG=nadiCheck(P[1]);
   const nadiMatch=nadiB!==nadiG;
@@ -1018,41 +995,41 @@ function go2(){
   $('#quickNav').style.display='flex';
   $('#pb').style.display='inline-flex';
 
-  const sevBadge=lvl=>lvl===0?'<span class="badge ok-b">தோஷம் இல்லை ✔</span>':lvl===1?'<span class="badge mid-b">விதிவிலக்கு செவ்வாய்</span>':'<span class="badge no-b">செவ்வாய் தோஷம்</span>';
+  const sevBadge=lvl=>lvl===0?'<span class="badge ok-b">தோஷம் இல்லை ✔</span>':lvl===1?'<span class="badge mid-b">விதிவிலக்கு</span>':'<span class="badge no-b">செவ்வாய் தோஷம்</span>';
   const matchPct=Math.round(sc*10);
 
   $('#report').innerHTML=`
     <div class="rep-banner">
       <div class="mantra-top">${mantra}</div>
-      <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin:6px 0">
-        <svg width="46" height="46" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#c89223"/><circle cx="32" cy="32" r="22" fill="#7c130d"/><path fill="#ffe9b0" d="M32 12l5 14h14L40 35l4 14-12-8-12 8 4-14-11-9h14z"/></svg>
+      <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin:8px 0">
+        <svg width="46" height="46" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#c89223"/><circle cx="32" cy="32" r="22" fill="#7c130d"/><path fill="#fff" d="M32 12l5 14h14L40 35l4 14-12-8-12 8 4-14-11-9h14z"/></svg>
         <div class="center-title">${center}</div>
       </div>
       <div class="astro-sub">${astro}</div>
-      <div style="font-size:.76rem;color:#6e4f35;margin-top:5px">கணிப்பு: திருக்கணித பஞ்சாங்கம் (லாஹிரி) · ${fd(new Date())}</div>
+      <div style="font-size:.78rem;color:var(--ink);margin-top:8px;opacity:.7">கணிப்பு: திருக்கணித பஞ்சாங்கம் (லாஹிரி) · ${fd(new Date())}</div>
     </div>
 
     <section id="sec-match" class="pg">
       <div class="hd"><h2>💑 திருமணப் பொருத்தம் & காதல்</h2><span class="badge">${P[0].name} ❤ ${P[1].name}</span></div>
       <div class="couple-hero">
-        <div class="ornate-box" style="margin:0;border-left:5px solid #7c130d">
-          <div style="font-size:1rem;color:#7c130d;font-weight:700">🤵 ${P[0].name}</div>
+        <div class="ornate-box" style="margin:0;border-left:4px solid #7c130d">
+          <div style="font-size:1.05rem;color:#7c130d;font-weight:700">🤵 ${P[0].name}</div>
           <div>ராசி: <b>${RS[P[0].rs]}</b> · ${NK[P[0].nk]} (பாதம் ${P[0].pada})</div>
           <div>லக்னம்: <b>${RS[sg(P[0].lag)]}</b></div>
         </div>
         <div class="couple-knot">💍</div>
-        <div class="ornate-box" style="margin:0;border-left:5px solid #0b6e29">
-          <div style="font-size:1rem;color:#0b6e29;font-weight:700">👰 ${P[1].name}</div>
+        <div class="ornate-box" style="margin:0;border-left:4px solid #0b6e29">
+          <div style="font-size:1.05rem;color:#0b6e29;font-weight:700">👰 ${P[1].name}</div>
           <div>ராசி: <b>${RS[P[1].rs]}</b> · ${NK[P[1].nk]} (பாதம் ${P[1].pada})</div>
           <div>லக்னம்: <b>${RS[sg(P[1].lag)]}</b></div>
         </div>
       </div>
       <div class="score-wrap">
         <div class="score-box">${gaugeSvg(matchPct,sc>=7.5?'#0b6e29':sc>=5.5?'#c89223':'#b8140f')}
-          <div class="score-info"><div style="font-size:.84rem;font-weight:700">தசவித பொருத்தம்</div><div class="score">${sc} / 10</div><div style="font-size:.86rem"><b>${vd}</b></div>${rjAlert?'<div class="no" style="font-size:.78rem">⚠ ரஜ்ஜு/வேதை கவனம்</div>':''}</div>
+          <div class="score-info"><div style="font-size:.88rem;font-weight:700">தசவித பொருத்தம்</div><div class="score">${sc} / 10</div><div style="font-size:.88rem"><b>${vd}</b></div>${rjAlert?'<div class="no" style="font-size:.8rem">⚠ ரஜ்ஜு/வேதை கவனம்</div>':''}</div>
         </div>
-        <div class="score-box">${gaugeSvg(lv.score,'#991b14')}
-          <div class="score-info"><div style="font-size:.84rem;font-weight:700">❤️ காதல் & மன இணக்கம்</div><div class="score">${lv.score}%</div><div style="font-size:.81rem">பெயர் எண்: <b>${lv.nameNum}</b></div><div style="font-size:.76rem;margin-top:2px">${lv.text}</div></div>
+        <div class="score-box">${gaugeSvg(lv.score,'#c89223')}
+          <div class="score-info"><div style="font-size:.88rem;font-weight:700">❤️ காதல் & மன இணக்கம்</div><div class="score">${lv.score}%</div><div style="font-size:.85rem">பெயர் எண்: <b>${lv.nameNum}</b></div><div style="font-size:.8rem;margin-top:4px">${lv.text}</div></div>
         </div>
       </div>
       <h3 class="sec-sub">📋 தசவித பொருத்த அட்டவணை</h3>
@@ -1088,32 +1065,29 @@ function go2(){
           <td>லக் ${dB.mars.hLag}-ல் · ராசி ${dB.mars.hMoon}-ல் · சுக் ${dB.mars.hVen}-ல்<br>${sevBadge(dB.mars.sevLevel)}${dB.mars.exReasons.length?`<br><small class="ok">${dB.mars.exReasons.join(', ')}</small>`:''}</td>
           <td>லக் ${dG.mars.hLag}-ல் · ராசி ${dG.mars.hMoon}-ல் · சுக் ${dG.mars.hVen}-ல்<br>${sevBadge(dG.mars.sevLevel)}${dG.mars.exReasons.length?`<br><small class="ok">${dG.mars.exReasons.join(', ')}</small>`:''}</td>
         </tr>
-        <tr><td><b>ராகு-கேது (நாக தோஷம்)</b></td>
+        <tr><td><b>ராகு-கேது</b></td>
           <td>ராகு ${dB.rk.rkL_R}-ல், கேது ${dB.rk.rkL_K}-ல்<br>${dB.rk.nagaLag?'<span class="mid">நாக நிலை உண்டு</span>':'<span class="ok">தோஷம் இல்லை ✔</span>'}</td>
           <td>ராகு ${dG.rk.rkL_R}-ல், கேது ${dG.rk.rkL_K}-ல்<br>${dG.rk.nagaLag?'<span class="mid">நாக நிலை உண்டு</span>':'<span class="ok">தோஷம் இல்லை ✔</span>'}</td>
         </tr>
-        <tr><td><b>கால சர்ப்ப யோகம்</b></td>
-          <td>${dB.rk.kalaSarpa?'<span class="mid">உண்டு (பரிகாரம்)</span>':'<span class="ok">இல்லை ✔</span>'}</td>
-          <td>${dG.rk.kalaSarpa?'<span class="mid">உண்டு (பரிகாரம்)</span>':'<span class="ok">இல்லை ✔</span>'}</td>
+        <tr><td><b>கால சர்ப்பம்</b></td>
+          <td>${dB.rk.kalaSarpa?'<span class="mid">உண்டு</span>':'<span class="ok">இல்லை ✔</span>'}</td>
+          <td>${dG.rk.kalaSarpa?'<span class="mid">உண்டு</span>':'<span class="ok">இல்லை ✔</span>'}</td>
         </tr>
-        <tr><td><b>🔀 நாடி தோஷம்</b></td>
-          <td><b>${NADI_NAMES[nadiB]}</b></td>
-          <td><b>${NADI_NAMES[nadiG]}</b></td>
-        </tr>
+        <tr><td><b>🔀 நாடி தோஷம்</b></td><td><b>${NADI_NAMES[nadiB]}</b></td><td><b>${NADI_NAMES[nadiG]}</b></td></tr>
         <tr><td><b>நாடி பொருத்தம்</b></td>
-          <td colspan="2">${nadiMatch?'<span class="ok">✔ வெவ்வேறு நாடி — பொருத்தம் உண்டு (நாடி தோஷம் இல்லை)</span>':'<span class="mid">⚠ ஒரே நாடி — பரிகாரம் / ஜோதிட ஆலோசனை பரிந்துரை</span>'}</td>
+          <td colspan="2">${nadiMatch?'<span class="ok">✔ வெவ்வேறு நாடி — பொருத்தம் உண்டு (நாடி தோஷம் இல்லை)</span>':'<span class="mid">⚠ ஒரே நாடி — பரிகாரம் பரிந்துரை</span>'}</td>
         </tr>
       </table>
-      <div class="ornate-box" style="margin-top:8px"><b>📌 தீர்ப்பு:</b><br>
+      <div class="ornate-box" style="margin-top:12px"><b>📌 தீர்ப்பு:</b><br>
         • <b>செவ்வாய்:</b> <span class="${dSum.sevClass}">${dSum.sevMatch}</span><br>
         • <b>ராகு-கேது:</b> ${dSum.rkMatch}
       </div>
     </section>
 
     <section id="sec-muhurtham" class="pg">
-      <div class="hd"><h2>💍 முகூர்த்த மாதப் பரிந்துரை</h2><span class="badge">குரு/சுக்கிரன் கோசாரம் அடிப்படையில்</span></div>
-      ${muhurtas.length?`<div class="muhurtham-list">${muhurtas.map(m=>`<div class="muhurtham-item"><b>${m.month} மாதம் (${fd(m.date)})</b><div style="font-size:.8rem;margin-top:4px">குரு: ${m.jupR} · சுக்கிரன்: ${m.venR}</div><div style="font-size:.78rem;color:var(--ok);margin-top:3px">⭐ பொருத்தம்: ${m.score}/4</div></div>`).join('')}</div>`:'<div class="note">நடப்பு 12 மாதங்களில் குரு/சுக்கிரன் கோசாரம் அனுகூலமாக இல்லை — அனுபவமிக்க ஜோதிடரை நேரில் ஆலோசிக்கவும்.</div>'}
-      <div class="note" style="margin-top:10px">⚠️ சரியான முகூர்த்தம் (நாள்/நட்சத்திரம்/லக்னம்) தனியாக கணிக்க வேண்டும் — இது தோராயமான பரிந்துரை மட்டுமே.</div>
+      <div class="hd"><h2>💍 முகூர்த்த மாதப் பரிந்துரை</h2><span class="badge">குரு/சுக்கிரன் கோசாரம்</span></div>
+      ${muhurtas.length?`<div class="muhurtham-list">${muhurtas.map(m=>`<div class="muhurtham-item"><b>${m.month} மாதம் (${fd(m.date)})</b><div style="font-size:.85rem;margin-top:6px">குரு: ${m.jupR} · சுக்கிரன்: ${m.venR}</div><div style="font-size:.82rem;color:var(--ok);margin-top:4px;font-weight:700">⭐ பொருத்தம்: ${m.score}/4</div></div>`).join('')}</div>`:'<div class="note">நடப்பு 12 மாதங்களில் குரு/சுக்கிரன் கோசாரம் அனுகூலமாக இல்லை — ஜோதிடரை ஆலோசிக்கவும்.</div>'}
+      <div class="note" style="margin-top:12px">⚠️ சரியான முகூர்த்தம் (நாள்/நட்சத்திரம்/லக்னம்) தனியாக கணிக்க வேண்டும் — இது தோராயமான பரிந்துரை.</div>
     </section>
 
     ${personSection(P[0],'🤵 மணமகன் முழு ஜாதகம்',true,'sec-groom')}
@@ -1129,9 +1103,9 @@ function go2(){
       <div class="grid">
         ${[P[0],P[1]].map((p,i)=>{
           const l=LUCKY_ATTR[p.rs],nu=numerology(p,p.name);
-          return`<div class="ornate-box" style="border-left:5px solid ${i===0?'#7c130d':'#0b6e29'}">
-            <h4 style="margin:0 0 8px;color:${i===0?'#7c130d':'#0b6e29'}">${i===0?'🤵':'👰'} ${p.name} (${RS[p.rs]})</h4>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:.85rem">
+          return`<div class="ornate-box" style="border-left:4px solid ${i===0?'#7c130d':'#0b6e29'}">
+            <h4 style="margin:0 0 10px;color:${i===0?'#7c130d':'#0b6e29'}">${i===0?'🤵':'👰'} ${p.name} (${RS[p.rs]})</h4>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:.88rem">
               <div><b>அதிர்ஷ்ட நாள்:</b> ${l.day}</div>
               <div><b>திசை:</b> ${l.dir}</div>
               <div><b>நிறம்:</b> ${l.color}</div>
@@ -1146,14 +1120,14 @@ function go2(){
 
     <div class="rep-footer">
       <div style="max-width:65%">
-        <div style="font-weight:700;color:#8c1c13;font-family:'Noto Serif Tamil',serif">🙏 சுப ஆசீர்வாதம்:</div>
-        <div style="font-size:.86rem;margin-top:2px">${bless}</div>
+        <div style="font-weight:700;color:var(--red);font-family:'Noto Serif Tamil',serif">🙏 சுப ஆசீர்வாதம்:</div>
+        <div style="font-size:.9rem;margin-top:4px">${bless}</div>
         <div class="note">இக்கணிப்பு திருக்கணித (லாஹிரி) அடிப்படையில் உருவாக்கப்பட்டது. சுப முகூர்த்தத்திற்கு ஜோதிடரை அணுகவும்.</div>
       </div>
       <div class="seal-box">
-        <div style="font-size:.76rem;color:#7a5a40">கையொப்பம் & முத்திரை</div>
-        <div style="font-weight:700;color:#8c1c13;margin-top:16px">${sign}</div>
-        <div style="font-size:.78rem">${astro}</div>
+        <div style="font-size:.8rem;color:#7a5a40">கையொப்பம் & முத்திரை</div>
+        <div style="font-weight:700;color:var(--red);margin-top:20px">${sign}</div>
+        <div style="font-size:.85rem">${astro}</div>
       </div>
     </div>
   `;
@@ -1186,7 +1160,6 @@ $('#sampleBtn').onclick=loadSample;
 $('#pb').onclick=pdf;
 </script>
 
-<!-- Cloud Sync Script (unchanged) -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -1211,8 +1184,8 @@ function saveLocalProfilesList(){try{localStorage.setItem(LOCAL_PROFILES_KEY,JSO
 async function fetchGlobalRemote(){if(!isAdmin)return;const{u,k}=_c();try{const r=await fetch(`${u}/rest/v1/horoscope_reports?select=*&limit=200&order=created_at.desc`,{headers:{'apikey':k,'Authorization':`Bearer ${k}`}});if(r.ok){const rows=await r.json();remoteSbItems=rows.map(row=>({id:row.id,groom:row.groom,bride:row.bride,score:row.score,loveScore:row.love_score,verdict:row.verdict,cfg:row.cfg,createdAt:row.created_at,_origin:'global_sb'}));refreshProfileView()}}catch(e){}}
 
 function updateAdminUI(){
-  if(isAdmin){adminModalBtn.textContent='👑 நிர்வாகி';adminModalBtn.classList.add('logged');modeBadge.textContent='👑 நிர்வாகி';modeBadge.className='badge ok-b';panelTitle.textContent='🌐 உலகளாவிய ஜாதகப் பட்டியல்';statusEl.textContent='அனைத்து சுயவிவரங்களையும் தேட/திருத்த/நீக்க முடியும்';document.getElementById('admLogoutBtn').style.display='inline-flex';fetchGlobalRemote()}
-  else{adminModalBtn.textContent='🔐 நிர்வாகி';adminModalBtn.classList.remove('logged');modeBadge.textContent='👤 பயனர்';modeBadge.className='badge';panelTitle.textContent='🗂️ உங்கள் சேமிப்புகள்';statusEl.textContent='உலாவியில் (Local Memory) சேமிக்கப்பட்ட சுயவிவரங்கள்';document.getElementById('admLogoutBtn').style.display='none'}
+  if(isAdmin){adminModalBtn.textContent='👑 நிர்வாகி';adminModalBtn.classList.add('logged');modeBadge.textContent='👑 நிர்வாகி';modeBadge.className='badge ok-b';panelTitle.textContent='🌐 உலகளாவிய ஜாதகப் பட்டியல்';statusEl.textContent='அனைத்து சுயவிவரங்களையும் நிர்வகிக்கலாம்';document.getElementById('admLogoutBtn').style.display='inline-flex';fetchGlobalRemote()}
+  else{adminModalBtn.textContent='🔐 நிர்வாகி';adminModalBtn.classList.remove('logged');modeBadge.textContent='👤 பயனர்';modeBadge.className='badge';panelTitle.textContent='🗂️ உங்கள் சேமிப்புகள்';statusEl.textContent='உலாவியில் (Local Memory) சேமிக்கப்பட்டவை';document.getElementById('admLogoutBtn').style.display='none'}
   refreshProfileView()
 }
 adminModalBtn.onclick=()=>{document.getElementById('adm_err').textContent='';adminModal.style.display='flex'};
@@ -1282,17 +1255,17 @@ function renderProfileCards(items){
     card.innerHTML=`
       <div>
         <div style="display:flex;justify-content:space-between;align-items:center;gap:4px">
-          <b style="color:var(--red);font-size:.93rem">🤵 ${g.name||'மணமகன்'} ❤ 👰 ${b.name||'மணமகள்'}</b>
+          <b style="color:var(--red);font-size:.95rem">🤵 ${g.name||'மணமகன்'} ❤ 👰 ${b.name||'மணமகள்'}</b>
           <span class="badge ok-b">${item.score??'-'}/10</span>
         </div>
-        <div style="font-size:.78rem;margin-top:4px"><b>வரன்:</b> ${g.rasi||''} (${g.nakshatra||''}) · ${g.place||''}<br><b>மணமகள்:</b> ${b.rasi||''} (${b.nakshatra||''}) · ${b.place||''}</div>
-        <div style="font-size:.69rem;color:#7a5a40;margin-top:4px">🕒 ${dtStr}</div>
+        <div style="font-size:.82rem;margin-top:6px"><b>வரன்:</b> ${g.rasi||''} (${g.nakshatra||''}) · ${g.place||''}<br><b>மணமகள்:</b> ${b.rasi||''} (${b.nakshatra||''}) · ${b.place||''}</div>
+        <div style="font-size:.72rem;color:#7a5a40;margin-top:6px">🕒 ${dtStr}</div>
       </div>
       <div class="cloud-actions">
         <button type="button" class="match-btn">🔮 பொருத்தம்</button>
         <button type="button" class="sec edit-btn">✏️ திருத்து</button>
         <button type="button" class="sec pdf-btn">📄 PDF</button>
-        <button type="button" class="sec del-btn" style="color:#b8140f;border-color:#b8140f">🗑️ நீக்கு</button>
+        <button type="button" class="sec del-btn" style="color:var(--no);border-color:var(--no)">🗑️ நீக்கு</button>
       </div>`;
     card.querySelector('.match-btn').onclick=()=>{setEditingMode(null);applyProfileToForm(item,true)};
     card.querySelector('.edit-btn').onclick=()=>{setEditingMode(item);applyProfileToForm(item,false);document.getElementById('form').scrollIntoView({behavior:'smooth'})};
