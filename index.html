@@ -258,7 +258,10 @@ button.ok-btn{background:linear-gradient(135deg,var(--ok) 0%,#0b7a3b 100%);color
 }
 .cal-cell:hover{border-color:var(--gold);transform:translateY(-3px) scale(1.02);z-index:2;box-shadow:var(--shadow-md)}
 .cal-cell.today{border:2px solid var(--red);background:var(--gold-light)}
+.cal-cell.holiday{border:1px solid var(--no);background:rgba(224,62,62,0.05)}
+.cal-cell.festival{border:1px solid var(--gold);background:rgba(230,181,74,0.08)}
 .cal-cell .eng-d{font-size:1.15rem;font-weight:700;color:var(--red);font-family:'Noto Serif Tamil',serif}
+.cal-cell.holiday .eng-d{color:var(--no)}
 [data-theme="dark"] .cal-cell .eng-d{color:var(--gold)}
 .cal-cell .tam-d{font-size:.72rem;font-weight:700;color:var(--ok);background:rgba(14,159,77,.1);padding:2px 6px;border-radius:99px}
 .cal-cell .nk-mini{font-size:.7rem;opacity:.85;line-height:1.2;margin-top:4px}
@@ -430,6 +433,47 @@ details.astro-cfg summary::-webkit-details-marker{display:none}
 .spinner{width:64px;height:64px;border:5px solid rgba(230,181,74,.2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loader-text{color:#ffe9b0;font-weight:700;font-size:1.1rem;font-family:'Noto Serif Tamil',serif;letter-spacing:.5px}
+
+/* ===== PDF ONLY PRINT MODE (Smart 3-Page Layout) ===== */
+body.pdf-mode {
+  background: #fff !important;
+  --bg: #fff; --surface: #fff; --gold-light: #fef9f0; --border: #e0e0e0;
+}
+body.pdf-mode .top, body.pdf-mode .sticky-nav, body.pdf-mode .mode-tabs, 
+body.pdf-mode details.astro-cfg, body.pdf-mode .cloud-panel, 
+body.pdf-mode #mainBtnRow, body.pdf-mode #editBanner, body.pdf-mode .rep-nav,
+body.pdf-mode .btn-row, body.pdf-mode #pdf-btn-top { display: none !important; }
+body.pdf-mode .wrap { max-width: 100%; padding: 0; margin: 0; }
+body.pdf-mode #report { border: none; box-shadow: none; padding: 0; margin: 0; display: block !important; }
+body.pdf-mode .pg { page-break-after: always; margin-bottom: 0; padding-bottom: 10px; border-bottom: none; }
+body.pdf-mode .pg:last-child { page-break-after: auto; }
+body.pdf-mode .ornate-box { padding: 8px; margin-bottom: 8px; border-radius: 6px; }
+body.pdf-mode .hd { padding: 8px 12px; margin-bottom: 10px; }
+body.pdf-mode .hd h2 { font-size: 1rem; }
+body.pdf-mode .dmy-grid { gap: 8px; }
+body.pdf-mode .dmy-card { padding: 8px; font-size: 0.75rem; }
+body.pdf-mode .dmy-card h4 { font-size: 0.85rem; margin-bottom: 4px; padding-bottom: 4px; }
+body.pdf-mode .grid { gap: 8px; }
+body.pdf-mode .life-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+body.pdf-mode .life-item { padding: 6px; font-size: 0.75rem; }
+body.pdf-mode table { font-size: 0.7rem; margin: 6px 0; }
+body.pdf-mode td, body.pdf-mode th { padding: 4px 6px; }
+body.pdf-mode .ch { max-width: 280px; } body.pdf-mode .ch div { min-height: 55px; font-size: 0.7rem; }
+body.pdf-mode .bhukti-grid { grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 6px; }
+body.pdf-mode .bh-item { font-size: 0.6rem; padding: 3px 4px; }
+body.pdf-mode .rep-banner { padding: 10px; margin-bottom: 10px; }
+body.pdf-mode .rep-banner .center-title { font-size: 1.2rem; }
+body.pdf-mode .score-wrap { gap: 8px; margin: 8px 0; }
+body.pdf-mode .score-box { padding: 10px; }
+body.pdf-mode .gauge-svg { width: 60px; height: 60px; }
+body.pdf-mode .info-cards { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+body.pdf-mode .info-card { padding: 8px; }
+body.pdf-mode .panchangam-strip { padding: 10px; gap: 6px; }
+body.pdf-mode .panch-item { padding: 6px; }
+body.pdf-mode .rep-footer { padding: 10px; margin-top: 10px; }
+
+/* Two column compact layout for PDF */
+body.pdf-mode .pdf-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 </style>
 </head>
 <body>
@@ -465,11 +509,10 @@ details.astro-cfg summary::-webkit-details-marker{display:none}
     <span>🪐 கிரகப் பெயர்ச்சி</span>
     <span>🛡️ தோஷ ஆய்வு</span>
     <span>🗂️ சுயவிவர வங்கி</span>
-    <span>📄 A4 PDF</span>
+    <span>📄 3-பேஜ் PDF</span>
   </div>
 </div>
 
-<!-- MODERN STICKY NAV -->
 <nav class="sticky-nav">
   <div class="nav-inner">
     <a class="nav-pill" onclick="switchAppMode('single')">👤 தனி ஜாதகம்</a>
@@ -516,15 +559,15 @@ details.astro-cfg summary::-webkit-details-marker{display:none}
     </div>
   </details>
 
-  <!-- 4-MODE APP SWITCHER -->
+  <!-- 4-MODE APP SWITCHER (Single is now 1st) -->
   <div class="mode-tabs">
-    <div class="mode-tab active" id="tab-couple" onclick="switchAppMode('couple')">
-      <span>💑 திருமணப் பொருத்தம்</span>
-      <small>மணமகன் + மணமகள்</small>
-    </div>
-    <div class="mode-tab" id="tab-single" onclick="switchAppMode('single')">
+    <div class="mode-tab active" id="tab-single" onclick="switchAppMode('single')">
       <span>👤 தனி ஜாதகம்</span>
       <small>Single Horoscope</small>
+    </div>
+    <div class="mode-tab" id="tab-couple" onclick="switchAppMode('couple')">
+      <span>💑 திருமணப் பொருத்தம்</span>
+      <small>மணமகன் + மணமகள்</small>
     </div>
     <div class="mode-tab" id="tab-calendar" onclick="switchAppMode('calendar')">
       <span>📆 தமிழ் காலண்டர்</span>
@@ -541,13 +584,8 @@ details.astro-cfg summary::-webkit-details-marker{display:none}
     <button type="button" id="cancelEditBtn" class="sec" style="padding:6px 14px;font-size:.85rem">✕ ரத்து செய்</button>
   </div>
 
-  <!-- SECTION A: COUPLE MATCHING FORM -->
-  <div id="view-couple">
-    <div class="grid" id="form"></div>
-  </div>
-
-  <!-- SECTION B: SINGLE HOROSCOPE PROFILE FORM -->
-  <div id="view-single" style="display:none">
+  <!-- SECTION A: SINGLE HOROSCOPE FORM (Now 1st) -->
+  <div id="view-single">
     <div class="card single-card">
       <div class="card-title">
         <div class="role-avatar">
@@ -582,6 +620,11 @@ details.astro-cfg summary::-webkit-details-marker{display:none}
         💡 <b>குறிப்பு:</b> சேமிக்கப்பட்ட எந்தவொரு தனி ஜாதகத்தையும் (Single Profile) கீழே உள்ள பட்டியலில் இருந்து <b>"🤵 வரனாக எடு"</b> அல்லது <b>"👰 மணமகளாக எடு"</b> பொத்தான் மூலம் உடனடியாக திருமணப் பொருத்தத்திற்குப் பயன்படுத்தலாம்!
       </div>
     </div>
+  </div>
+
+  <!-- SECTION B: COUPLE MATCHING FORM (Now 2nd) -->
+  <div id="view-couple" style="display:none">
+    <div class="grid" id="form"></div>
   </div>
 
   <!-- ACTION BUTTONS FOR COUPLE / SINGLE -->
@@ -668,7 +711,7 @@ const NK=['அசுவினி','பரணி','கார்த்திகை
 const PN=['சூரியன்','சந்திரன்','செவ்வாய்','புதன்','குரு','சுக்கிரன்','சனி','ராகு','கேது'];
 const PS=['சூ','சந்','செ','பு','கு','சு','சனி','ரா','கே'];
 
-window.appMode='couple';
+window.appMode='single';
 
 RS.forEach((r,i)=>{
   $('#filterRasi').innerHTML+=`<option value="${r}">${r}</option>`;
@@ -818,6 +861,36 @@ const LUCKY_ATTR=[
   {day:'வியாழன், திங்கள்',dir:'வடகிழக்கு',color:'பொன் மஞ்சள்',num:[3,2,9],time:'காலை 6:30–8:30',deity:'திருவண்ணாமலை அண்ணாமலையார்'}
 ];
 
+const NAKSHATRA_PALAN={
+  0:'புதிய முயற்சிகளில் வெற்றி கிடைக்கும். தைரியம் கூடும், உற்சாகமான நாள்.',
+  1:'குடும்பத்தில் மகிழ்ச்சி. எதிர்பார்த்த வேலை கைகூடும், விருப்பம் நிறைவேறும்.',
+  2:'செலவுகள் அதிகரிக்கும். வீண் வாக்குவாதங்களைத் தவிர்க்கவும்.',
+  3:'சுபகாரியங்கள் நடைபெறும். துணையின் ஆதரவு கிடைக்கும், மனநிறைவு உண்டாகும்.',
+  4:'உடல் ஆரோக்கியத்தில் கவனம் தேவை. புதிய முயற்சிகளைத் தள்ளிப்போடவும்.',
+  5:'பணவரவு தாராளமாக இருக்கும். கடன் தொல்லைகள் நீங்கும், நல்ல பேச்சுவார்த்தை.',
+  6:'எதிர்பாராத தடைகள் ஏற்படலாம். பொறுமையுடன் செயல்படுவது நல்லது.',
+  7:'அரசு/வங்கி வழி நன்மைகள் கிடைக்கும். உயர் அதிகாரிகளின் பாராட்டு.',
+  8:'செலவுகள் மற்றும் பயணங்கள் ஏற்படும். வாகனங்களைக் கவனமாக இயக்கவும்.',
+  9:'பெரியோர்களின் ஆசி கிடைக்கும். குடும்பத்தில் சுப நிகழ்வுகள்.',
+  10:'தொழிலில் புதிய வாய்ப்புகள் வரும். கூட்டாண்மை முயற்சிகளில் வெற்றி.',
+  11:'மறைமுக எதிர்ப்புகள் விலகும். ஆரோக்கியம் சீராகும், காரிய சித்தி.',
+  12:'முதலீட்டில் நிதானம் தேவை. மனக்குழப்பங்களைத் தவிர்க்கவும்.',
+  13:'வெற்றியும் புகழும் கிடைக்கும். கலைத் துறையினருக்கு நல்ல நாள்.',
+  14:'காரியங்களில் தாமதம் ஏற்படலாம். விட்டுக்கொடுத்து செல்லவும்.',
+  15:'நண்பர்களின் ஆதரவு கிடைக்கும். வியாபாரத்தில் லாபம் அதிகரிக்கும்.',
+  16:'சுபமான நாள். திருமணம், புதிய காரியங்களைத் தொடங்கலாம்.',
+  17:'எதிர்ப்புகள் மற்றும் போட்டிகள் அதிகரிக்கும். தற்காப்புடன் செயல்படவும்.',
+  18:'மன அமைதி குன்றும். இறைவணக்கம் செய்வது மனதிற்கு நிம்மதி தரும்.',
+  19:'பாக்கிய ஸ்தான பலன்கள் கைகூடும். எதிர்பார்த்த நன்மைகள் கிடைக்கும்.',
+  20:'குடும்பத்தில் மகிழ்ச்சி. உறவினர்களின் வருகையால் விசேஷம்.',
+  21:'கல்வி மற்றும் அறிவுசார் வேலைகளில் வெற்றி. போட்டித் தேர்வுகளுக்கு சாதகம்.',
+  22:'புதிய பொருள் சேர்க்கை ஏற்படும். சொகுசு வாழ்க்கைக்கு முக்கியத்துவம்.',
+  23:'தொடர் முயற்சியால் வெற்றி. தந்தையின் ஆதரவு கிடைக்கும்.',
+  24:'தடைகள் நீங்கி வெற்றி பிறக்கும். அரசு அதிகாரிகளால் உதவி.',
+  25:'திடீர் நன்மைகள் ஏற்படும். லாபகரமான ஒப்பந்தங்கள் கைகூடும்.',
+  26:'மங்களமான நாள். எடுத்த காரியங்களில் வெற்றியும் நன்மையும் கிடைக்கும்.'
+};
+
 const TAMIL_MONTHS=['சித்திரை','வைகாசி','ஆனி','ஆடி','ஆவணி','புரட்டாசி','ஐப்பசி','கார்த்திகை','மார்கழி','தை','மாசி','பங்குனி'];
 const TAMIL_YEARS_60=['பிரபவ','விபவ','சுக்ல','பிரமோதூத','பிரஜோற்பத்தி','ஆங்கீரஸ','ஸ்ரீமுக','பவ','யுவ','தாது','ஈஸ்வர','வெகுதானிய','பிரமாதி','விக்கிரம','விஷு','சித்திரபானு','சுபானு','தாரண','பார்த்திப','விய','சர்வஜித்','சர்வதாரி','விரோதி','விக்ருதி','கர','நந்தன','விஜய','ஜய','மன்மத','துன்முகி','ஹேவிளம்பி','விளம்பி','விகாரி','சார்வரி','பிலவ','சுபகிருது','சோபகிருது','குரோதி','விசுவாவசு','பராபவ','பிலவங்க','கீலக','சௌமிய','சாதாரண','விரோதிகிருது','பரிதாபி','பிரமாதீச','ஆனந்த','ராட்சச','நள','பிங்கள','காளயுக்தி','சித்தார்த்தி','ரௌத்திரி','துன்மதி','துந்துபி','ருத்ரோத்காரி','ரக்தாட்சி','குரோதன','அட்சய'];
 const TITHI_NAMES=['பிரதமை','துவிதியை','திருதியை','சதுர்த்தி','பஞ்சமி','சஷ்டி','சப்தமி','அஷ்டமி','நவமி','தசமி','ஏகாதசி','துவாதசி','திரயோதசி','சதுர்தசி','பௌர்ணமி/அமாவாசை'];
@@ -832,7 +905,40 @@ const GOWRI_NALLA=['காலை 10:30–11:30','காலை 9:15–10:15','ம
 const SOOLAM=['மேற்கு','கிழக்கு','வடக்கு','வடக்கு','தெற்கு','மேற்கு','கிழக்கு'];
 const PARIGARAM_SOOLAM=['வெல்லம்','தயிர்','பால்','பால்','தைலம்','வெல்லம்','தயிர்'];
 
+// Holiday & Festival Mapping for Calendar
+const GOVT_HOLIDAYS={'01-01':'New Year','01-14':'பொங்கல்','01-15':'தைப்பொங்கல்','01-16':'மாட்டுப்பொங்கல்','01-26':'குடியரசு தினம்','04-14':'தமிழ்ப்புத்தாண்டு','08-15':'சுதந்திர தினம்','10-02':'காந்தி ஜெயந்தி','12-25':'கிறிஸ்துமஸ்'};
+const FESTIVALS={'01-15':'பொங்கல்','05-01':'மே தினம்','11-01':'தீபாவளி','12-25':'கிறிஸ்துமஸ்','03-08':'மகளிர் தினம்'}; // Simplified for example
+
 const fd=d=>d.toLocaleDateString('en-GB'),sg=x=>Math.floor(x/30),nv=x=>Math.floor(x/(40/3))%12;
+
+// Function to calculate the end time of Tithi/Nakshatra (approx)
+function getTransitionTime(date, type){
+  let J=date.getTime()/864e5+2440587.5;
+  const startPos=pos(J,null).sid;
+  const startVal = type==='tithi' ? n(startPos[1]-startPos[0]) : startPos[1];
+  const step = type==='tithi' ? 12 : (40/3);
+  const currentSegment = Math.floor(startVal/step);
+  const targetVal = (currentSegment+1)*step;
+  
+  let J_end = J;
+  let loops = 0;
+  while(loops < 48){ // max 48 hours
+    J_end += 1/24; // +1 hour
+    const p = pos(J_end, null).sid;
+    const val = type==='tithi' ? n(p[1]-p[0]) : p[1];
+    
+    // check if it crossed the target (handle 360 wrap)
+    const diff = type==='tithi' ? n(val - targetVal) : n(val - targetVal);
+    if(diff > 350) { // crossed
+      break;
+    }
+    loops++;
+  }
+  const endDate = new Date((J_end - 2440587.5)*864e5);
+  const h = String(endDate.getHours()).padStart(2,'0');
+  const m = String(endDate.getMinutes()).padStart(2,'0');
+  return `${h}:${m}`;
+}
 
 function getTamilDateDetails(dateObj){
   const J=dateObj.getTime()/864e5+2440587.5;
@@ -859,14 +965,30 @@ function getTamilDateDetails(dateObj){
   const pada=Math.floor((moonL%(40/3))/(10/3))+1;
   const yogaIdx=Math.floor(n(sunL+moonL)/(40/3))%27;
 
+  // Calculate transition times (approx)
+  const tithiEnd = getTransitionTime(dateObj, 'tithi');
+  const nkEnd = getTransitionTime(dateObj, 'nakshatra');
+
+  // Holiday & Festival Logic
+  const dateStr = `${String(dateObj.getMonth()+1).padStart(2,'0')}-${String(dateObj.getDate()).padStart(2,'0')}`;
+  const isGovtHoliday = !!GOVT_HOLIDAYS[dateStr];
+  const holidayName = GOVT_HOLIDAYS[dateStr] || FESTIVALS[dateStr] || '';
+  const isFestival = !!FESTIVALS[dateStr] || tithiIdx%15===13 || nkIdx===10; // add major festivals
+  
+  // Bank working day (Sunday = 0, 2nd/4th Sat = 6)
+  const isSunday = wd === 0;
+  const is2nd4thSat = wd === 6 && Math.ceil(dateObj.getDate()/7) % 2 === 0;
+  const isBankHoliday = isSunday || is2nd4thSat || isGovtHoliday;
+
   return{
     date:dateObj,tamilYearName,tamilMonth,tamilDay,ayanam,ritu,
-    weekday:WEEKDAYS_TA[wd],tithiName,tithiIdx,paksha,
-    nakshatra:NK[nkIdx],nkIdx,pada,yoga:YOGA_NAMES[yogaIdx],karana,
+    weekday:WEEKDAYS_TA[wd],tithiName,tithiEnd,tithiIdx,paksha,
+    nakshatra:NK[nkIdx],nkEnd,nkIdx,pada,yoga:YOGA_NAMES[yogaIdx],karana,
     sunRasi:RS[sunR],moonRasi:RS[moonR],moonR,
     rahuKalam:RAHU_KALAM[wd],yamaGandam:YAMA_GANDAM[wd],kuligai:KULIGAI[wd],
     nallaNeram:NALLA_NERAM[wd],gowriNalla:GOWRI_NALLA[wd],
-    soolam:SOOLAM[wd],parigaram:PARIGARAM_SOOLAM[wd],sid:o.sid
+    soolam:SOOLAM[wd],parigaram:PARIGARAM_SOOLAM[wd],sid:o.sid,
+    isGovtHoliday, holidayName, isFestival, isBankHoliday
   };
 }
 
@@ -895,21 +1017,31 @@ function renderCalendarHub(){
     const curD=new Date(yr,mo,d,7,30);
     const info=getTamilDateDetails(curD);
     const isSel=d===selDate.getDate();
-    let tag='';
-    if(info.tithiIdx===14){tag='🌕 பௌர்ணமி';specialDays.push(`${d}/${mo+1}: பௌர்ணமி (${info.tamilMonth} ${info.tamilDay})`);}
-    else if(info.tithiIdx===29){tag='🌑 அமாவாசை';specialDays.push(`${d}/${mo+1}: அமாவாசை (${info.tamilMonth} ${info.tamilDay})`);}
-    else if(info.tithiIdx%15===10){tag='🙏 ஏகாதசி';specialDays.push(`${d}/${mo+1}: ஏகாதசி`);}
-    else if(info.tithiIdx%15===12){tag='🔱 பிரதோஷம்';specialDays.push(`${d}/${mo+1}: பிரதோஷம்`);}
-    else if(info.tithiIdx===5){tag='🐓 சஷ்டி';}
-    else if(info.nkIdx===2){tag='⭐ கிருத்திகை';}
+    let tag='', tagColor='', icon='';
+    
+    if(info.isGovtHoliday){ tag='🔴 விடுமுறை'; tagColor='color:var(--no);font-weight:bold'; icon='🏦'; }
+    else if(info.isFestival){ tag='🛕 பண்டிகை'; tagColor='color:var(--ok);font-weight:bold'; icon='🌸'; }
+    else if(info.tithiIdx===14){ tag='🌕 பௌர்ணமி'; specialDays.push(`${d}/${mo+1}: பௌர்ணமி (${info.tamilMonth} ${info.tamilDay})`); }
+    else if(info.tithiIdx===29){ tag='🌑 அமாவாசை'; specialDays.push(`${d}/${mo+1}: அமாவாசை (${info.tamilMonth} ${info.tamilDay})`); }
+    else if(info.tithiIdx%15===10){ tag='🙏 ஏகாதசி'; specialDays.push(`${d}/${mo+1}: ஏகாதசி`); }
+    else if(info.tithiIdx%15===12){ tag='🔱 பிரதோஷம்'; icon='💍'; }
+    else if(info.tithiIdx===5){ tag='⚡ சஷ்டி'; icon='💍'; }
+    
+    let cellClass = 'cal-cell';
+    if(isSel) cellClass += ' today';
+    if(info.isGovtHoliday) cellClass += ' holiday';
+    if(info.isFestival) cellClass += ' festival';
+
     gridHtml+=`
-      <div class="cal-cell ${isSel?'today':''}" onclick="document.getElementById('calDatePicker').value='${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}';renderCalendarHub()" style="cursor:pointer">
+      <div class="${cellClass}" onclick="document.getElementById('calDatePicker').value='${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}';renderCalendarHub()" style="cursor:pointer">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <span class="eng-d">${d}</span>
           <span class="tam-d">${info.tamilMonth.slice(0,4)} ${info.tamilDay}</span>
         </div>
         <div class="nk-mini">★ ${info.nakshatra}<br>${info.tithiName}</div>
-        ${tag?`<div style="font-size:.66rem;font-weight:700;color:var(--red);margin-top:4px">${tag}</div>`:''}
+        ${tag?`<div style="font-size:.66rem;margin-top:4px;${tagColor}">${tag}</div>`:''}
+        ${info.holidayName ? `<div style="font-size:.62rem;margin-top:2px;color:var(--red)">${info.holidayName}</div>` : ''}
+        ${icon ? `<div style="position:absolute;bottom:4px;right:4px;font-size:.9rem">${icon}</div>` : ''}
       </div>`;
   }
 
@@ -955,14 +1087,12 @@ function renderCalendarHub(){
           </div>
 
           <table style="margin-top:16px;text-align:left;background:var(--surface);color:var(--ink)">
-            <tr><th>திதி</th><td><b>${pd.tithiName}</b> (${pd.paksha})</td></tr>
-            <tr><th>நட்சத்திரம்</th><td><b>${pd.nakshatra}</b> (பாதம் ${pd.pada})</td></tr>
+            <tr><th>திதி</th><td><b>${pd.tithiName}</b> (${pd.paksha}) <br><small style="color:var(--no)">முடிவு: மாலை ${pd.tithiEnd}</small></td></tr>
+            <tr><th>நட்சத்திரம்</th><td><b>${pd.nakshatra}</b> (பாதம் ${pd.pada}) <br><small style="color:var(--no)">முடிவு: மாலை ${pd.nkEnd}</small></td></tr>
             <tr><th>நாம யோகம் · கரணம்</th><td>${pd.yoga} · ${pd.karana}</td></tr>
             <tr><th>நல்ல நேரம்</th><td class="ok">${pd.nallaNeram}</td></tr>
-            <tr><th>கௌரி நல்ல நேரம்</th><td class="ok">${pd.gowriNalla}</td></tr>
             <tr><th>ராகு காலம் · எமகண்டம்</th><td><span class="no">ராகு: ${pd.rahuKalam}</span> · <span class="mid">எம: ${pd.yamaGandam}</span></td></tr>
-            <tr><th>குளிகை · வார சூலம்</th><td>குளிகை: ${pd.kuligai} · சூலம்: <b>${pd.soolam}</b> (பரிகாரம்: ${pd.parigaram})</td></tr>
-            <tr><th>சந்திராஷ்டம ராசி</th><td class="no">⚠ ${chandrashtamaRasi} ராசி நேயர்கள் இன்று கவனம்</td></tr>
+            <tr><th>விடுமுறை / பண்டிகை</th><td>${pd.isGovtHoliday ? '<span class="no">🔴 வங்கி விடுமுறை ('+pd.holidayName+')</span>' : pd.isBankHoliday ? '<span class="mid">🏦 வங்கி வேலை நாள் இல்லை</span>' : '<span class="ok">✅ வங்கி வேலை நாள்</span>'}</td></tr>
           </table>
         </div>
       </div>
@@ -972,7 +1102,8 @@ function renderCalendarHub(){
           <h3 style="margin-top:0">🌟 ${RS[selRasi]} ராசிக்கு இன்றைய பலன் (${fd(pd.date)})</h3>
           <p style="font-size:.92rem;margin:6px 0">இன்று சந்திரன் <b>${pd.moonRasi}</b> ராசியில் (உங்கள் ராசிக்கு <b>${dayBhava}-ம் இடத்தில்</b>) சஞ்சரிக்கிறார்.</p>
           <div class="dmy-card" style="margin-top:10px">
-            <b>📌 பலன்:</b> ${DAILY_BHAVA_TXT[dayBhava]}
+            <b>📌 பலன்:</b> ${DAILY_BHAVA_TXT[dayBhava]}<br><br>
+            <b>⭐ நட்சத்திர பலன் (${pd.nakshatra}):</b> ${NAKSHATRA_PALAN[pd.nkIdx]}
             <div class="luck-pills">
               <span>🎨 நிறம்: ${LUCKY_COLORS[selRasi]}</span>
               <span>🙏 தெய்வம்: ${DEITIES[selRasi]}</span>
@@ -992,7 +1123,7 @@ function renderCalendarHub(){
     </div>
 
     <h3 class="sec-sub">🗓️ மாதக் காலண்டர் (${selDate.toLocaleDateString('en-GB',{month:'long',year:'numeric'})})</h3>
-    <div class="note">எந்தத் தேதியையும் கிளிக் செய்து அன்றைய முழு பஞ்சாங்கத்தை மேலே பார்க்கலாம்.</div>
+    <div class="note">🔴 சிவப்பு = விடுமுறை / பண்டிகை | 🟢 பச்சை = சுப முகூர்த்தம் / விரதம்</div>
     <div class="cal-month-grid">${gridHtml}</div>
 
     <h3 class="sec-sub" style="margin-top:28px">📜 ${pd.tamilYearName} தமிழ் வருடப் பஞ்சாங்கம்</h3>
@@ -1002,6 +1133,9 @@ function renderCalendarHub(){
     </table>
   `;
 }
+
+// ... (Rest of the JS functions: match, loveMatch, checkDosha, dasha, etc., remain same) ...
+// [Included below for completeness]
 
 const GURU_TRANSIT_TXT={
   1:'ஜென்ம குரு: இடமாற்றம், பணிச்சுமை இருந்தாலும் குரு பார்வையால் 5, 7, 9-ம் இடங்கள் பலம் பெறும். தட்சிணாமூர்த்தி வழிபாடு சிறப்பு.',
@@ -1476,6 +1610,7 @@ function goSingle(){
     <a href="#sec-single-dosha">🛡️ தோஷ நிலை</a>
     <a href="#sec-single-num">🔢 எண் கணிதம்</a>
     <a href="#sec-single-rem">💎 ரத்தினம் & பரிகாரம்</a>
+    <button class="sec" style="margin-left:auto;padding:4px 12px;font-size:.75rem" onclick="pdf()">📄 PDF</button>
   `;
 
   $('#report').innerHTML=`
@@ -1487,9 +1622,12 @@ function goSingle(){
       </div>
       <div class="astro-sub">${astro}</div>
       <div style="font-size:.78rem;color:var(--ink);margin-top:8px;opacity:.7">தனி ஜாதக அறிக்கை (Single Horoscope) · ${panch.tamilYearName} வருடம் ${panch.tamilMonth} ${panch.tamilDay} (${fd(new Date())})</div>
+      <button class="sec" style="margin-top:10px;padding:6px 16px;font-size:.85rem" onclick="pdf()">📄 Download PDF</button>
     </div>
 
-    ${personSection(P,`👤 ${P.name} (${genderTag})`,false,'sec-single-main')}
+    <div class="pdf-two-col">
+      ${personSection(P,`👤 ${P.name} (${genderTag})`,false,'sec-single-main')}
+    </div>
 
     <section id="sec-single-dmy" class="pg">
       <div class="hd"><h2>📅 தினசரி · மாத · வருட ராசிபலன் & கிரகப் பெயர்ச்சி</h2></div>
@@ -1501,7 +1639,7 @@ function goSingle(){
       <table>
         <tr><th>ஆய்வு</th><th>நிலை & விவரம்</th></tr>
         <tr><td><b>செவ்வாய் தோஷ ஆய்வு</b></td><td>லக்னத்திற்கு ${dsh.mars.hLag}-ல் · ராசிக்கு ${dsh.mars.hMoon}-ல் · சுக்கிரனுக்கு ${dsh.mars.hVen}-ல் — ${sevBadge(dsh.mars.sevLevel)} ${dsh.mars.exReasons.length?`<span class="ok">(${dsh.mars.exReasons.join(', ')})</span>`:''}</td></tr>
-        <tr><td><b>ராகு-கேது நிலை</b></td><td>லக்னத்திற்கு ராகு ${dsh.rk.rkL_R}-ல், கேது ${dsh.rk.rkL_K}-ல் — ${dsh.rk.nagaLag?'<span class="mid">நாக தோஷ நிலை உண்டு (திருநாகேஸ்வரம் வழிபாடு நன்று)</span>':'<span class="ok">நாக தோஷம் இல்லை ✔</span>'}</td></tr>
+        <tr><td><b>ராகு-கேது நிலை</b></td><td>லக்னத்திற்கு ராகு ${dsh.rk.rkL_R}-ல், கேது ${dsh.rk.rkL_K}-ல் — ${dsh.rk.nagaLag?'<span class="mid">நாக தோஷ நிலை உண்டு</span>':'<span class="ok">நாக தோஷம் இல்லை ✔</span>'}</td></tr>
         <tr><td><b>கால சர்ப்ப நிலை</b></td><td>${dsh.rk.kalaSarpa?'<span class="mid">கால சர்ப்ப அமைப்பு உண்டு</span>':'<span class="ok">இல்லை ✔</span>'}</td></tr>
         <tr><td><b>நாடி</b></td><td><b>${NADI_NAMES[nadiP]}</b></td></tr>
       </table>
@@ -1521,6 +1659,9 @@ function goSingle(){
         <div style="font-weight:700;color:var(--red);margin-top:20px">${sign}</div>
         <div style="font-size:.85rem">${astro}</div>
       </div>
+    </div>
+    <div style="text-align:center;margin-top:10px" class="no-print">
+      <button class="sec" onclick="pdf()">📄 Download Full PDF</button>
     </div>
   `;
 
@@ -1568,6 +1709,7 @@ function go2(){
     <a href="#sec-groom">🤵 மணமகன்</a>
     <a href="#sec-bride">👰 மணமகள்</a>
     <a href="#sec-lucky">🍀 அதிர்ஷ்டம்</a>
+    <button class="sec" style="margin-left:auto;padding:4px 12px;font-size:.75rem" onclick="pdf()">📄 PDF</button>
   `;
 
   const sevBadge=lvl=>lvl===0?'<span class="badge ok-b">தோஷம் இல்லை ✔</span>':lvl===1?'<span class="badge mid-b">விதிவிலக்கு</span>':'<span class="badge no-b">செவ்வாய் தோஷம்</span>';
@@ -1582,6 +1724,7 @@ function go2(){
       </div>
       <div class="astro-sub">${astro}</div>
       <div style="font-size:.78rem;color:var(--ink);margin-top:8px;opacity:.7">கணிப்பு: திருக்கணித பஞ்சாங்கம் (லாஹிரி) · ${panch.tamilYearName} வருடம் ${panch.tamilMonth} ${panch.tamilDay} (${fd(new Date())})</div>
+      <button class="sec" style="margin-top:10px;padding:6px 16px;font-size:.85rem" onclick="pdf()">📄 Download PDF</button>
     </div>
 
     <section id="sec-match" class="pg">
@@ -1666,13 +1809,17 @@ function go2(){
       <div class="note" style="margin-top:12px">⚠️ ஆடி, புரட்டாசி, மார்கழி மாதங்கள் தவிர்த்து இருவரின் குரு மற்றும் சுக்கிர பலம் அடிப்படையில் கணிக்கப்பட்ட சுப மாதங்கள்.</div>
     </section>
 
-    ${personSection(P[0],'🤵 மணமகன் முழு ஜாதகம்',true,'sec-groom')}
-    ${numerologyBlock(P[0],'🤵 மணமகன்','sec-groom-num')}
-    ${remediesBlock(P[0],'🤵 மணமகன்','sec-groom-rem')}
-
-    ${personSection(P[1],'👰 மணமகள் முழு ஜாதகம்',true,'sec-bride')}
-    ${numerologyBlock(P[1],'👰 மணமகள்','sec-bride-num')}
-    ${remediesBlock(P[1],'👰 மணமகள்','sec-bride-rem')}
+    <div class="pdf-two-col">
+      ${personSection(P[0],'🤵 மணமகன் முழு ஜாதகம்',true,'sec-groom')}
+      ${personSection(P[1],'👰 மணமகள் முழு ஜாதகம்',true,'sec-bride')}
+    </div>
+    
+    <div class="pdf-two-col">
+      ${numerologyBlock(P[0],'🤵 மணமகன்','sec-groom-num')}
+      ${remediesBlock(P[0],'🤵 மணமகன்','sec-groom-rem')}
+      ${numerologyBlock(P[1],'👰 மணமகள்','sec-bride-num')}
+      ${remediesBlock(P[1],'👰 மணமகள்','sec-bride-rem')}
+    </div>
 
     <section id="sec-lucky" class="pg">
       <div class="hd"><h2>🍀 இருவருக்கும் அதிர்ஷ்ட விவரங்கள்</h2></div>
@@ -1706,6 +1853,9 @@ function go2(){
         <div style="font-size:.85rem">${astro}</div>
       </div>
     </div>
+    <div style="text-align:center;margin-top:10px" class="no-print">
+      <button class="sec" onclick="pdf()">📄 Download Full PDF</button>
+    </div>
   `;
 
   window.lastCalcReport={
@@ -1734,23 +1884,33 @@ function loadSample(){
 function pdf(){
   const btn=$('#pb'),oldTxt=btn.textContent;
   const prevTheme=document.body.getAttribute('data-theme');
+  
+  // Apply PDF mode class
+  document.body.classList.add('pdf-mode');
   document.body.setAttribute('data-theme','light');
+  
   btn.textContent='⏳ PDF தயாராகிறது...';
   const fname=window.appMode==='single'?`Jathagam-${$('#sn0').value||'Profile'}.pdf`:`Thirumana-Porutham-${$('#n0').value||'Groom'}-${$('#n1').value||'Bride'}.pdf`;
-  html2pdf().set({
-    margin:7,
-    filename:fname,
-    image:{type:'jpeg',quality:.96},
-    html2canvas:{scale:2,backgroundColor:'#ffffff',useCORS:true},
-    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
-    pagebreak:{mode:['css','legacy']}
-  }).from($('#report')).save().then(()=>{
-    document.body.setAttribute('data-theme',prevTheme);
-    btn.textContent=oldTxt;
-  }).catch(()=>{
-    document.body.setAttribute('data-theme',prevTheme);
-    btn.textContent=oldTxt;
-  });
+  
+  // Small timeout to let the DOM update with .pdf-mode class
+  setTimeout(()=>{
+    html2pdf().set({
+      margin: 10,
+      filename: fname,
+      image: {type:'jpeg', quality:.98},
+      html2canvas: {scale:2, backgroundColor:'#ffffff', useCORS:true, scrollY:0},
+      jsPDF: {unit:'mm', format:'a4', orientation:'portrait'},
+      pagebreak: {mode:['css','legacy'], before:'.pg-break'}
+    }).from($('#report')).save().then(()=>{
+      document.body.classList.remove('pdf-mode');
+      document.body.setAttribute('data-theme',prevTheme);
+      btn.textContent=oldTxt;
+    }).catch(()=>{
+      document.body.classList.remove('pdf-mode');
+      document.body.setAttribute('data-theme',prevTheme);
+      btn.textContent=oldTxt;
+    });
+  }, 100);
 }
 
 function shareWhatsApp(){
