@@ -644,7 +644,8 @@ body.pdf-mode .pdf-two-col { display: grid; grid-template-columns: 1fr 1fr; gap:
         <h2>📆 தமிழ் காலண்டர் & பஞ்சாங்கம்</h2>
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
           <input type="date" id="calDatePicker" style="width:auto;padding:8px 12px;background:#fff;color:#222;border-radius:10px">
-          <select id="calRasiSelect" style="width:auto;padding:8px 12px;background:#fff;color:#222;border-radius:10px"></select>
+          <select id="calRasiSelect" aria-label="ராசி" style="width:auto;padding:8px 12px;background:#fff;color:#222;border-radius:10px"></select>
+          <select id="calNakshatraSelect" aria-label="உங்கள் பிறந்த நட்சத்திரம்" style="width:auto;padding:8px 12px;background:#fff;color:#222;border-radius:10px"></select>
         </div>
       </div>
       <div id="calendarHubContent"></div>
@@ -718,6 +719,9 @@ RS.forEach((r,i)=>{
   $('#calRasiSelect').innerHTML+=`<option value="${i}">${r} ராசி</option>`;
   $('#transitRasiSelect').innerHTML+=`<option value="${i}">${r} ராசி</option>`;
 });
+NK.forEach((star,i)=>$('#calNakshatraSelect').add(new Option(star+' (பிறந்த நட்சத்திரம்)',String(i))));
+const savedDailyNakshatra=localStorage.getItem('iw_daily_nakshatra');
+if(savedDailyNakshatra!==null&&Number.isInteger(Number(savedDailyNakshatra))&&Number(savedDailyNakshatra)>=0&&Number(savedDailyNakshatra)<27)$('#calNakshatraSelect').value=savedDailyNakshatra;
 
 const themeBtn = document.getElementById('themeBtn');
 const savedTheme = localStorage.getItem('iw_theme') || 'light';
@@ -891,6 +895,10 @@ const NAKSHATRA_PALAN={
   26:'மங்களமான நாள். எடுத்த காரியங்களில் வெற்றியும் நன்மையும் கிடைக்கும்.'
 };
 
+const TARA_NAMES=['ஜென்ம தாரை','சம்பத் தாரை','விபத் தாரை','க்ஷேம தாரை','பிரத்யக் தாரை','சாதக தாரை','நைதன தாரை','மித்ர தாரை','பரம மித்ர தாரை'];
+const TARA_ADVICE=['உடல் ஓய்வு, மனநிதானம் முன்னுரிமை பெறட்டும். முக்கிய முடிவுகளை மீளாய்வு செய்யுங்கள்.','வரவு மற்றும் புதிய வாய்ப்புகளுக்கு சாதகமான நாள்; திட்டத்தைச் செயல்படுத்துங்கள்.','அவசரத்தையும் வாக்குவாதத்தையும் தவிர்த்து, பயணங்களில் கவனமாக இருங்கள்.','குடும்பம், உடல்நலம், நிலுவைப் பணிகளை ஒழுங்குபடுத்த ஏற்ற நாள்.','தாமதம் வரலாம்; ஆவணங்களையும் தகவல்களையும் இருமுறை சரிபாருங்கள்.','முயற்சியில் முன்னேற்றம் கிடைக்கும்; தொடர்ந்து செயல்படுங்கள்.','பெரிய செலவு மற்றும் ஆபத்தான முடிவுகளை ஒத்திவைத்து பாதுகாப்பாக இருங்கள்.','உறவுகள் மற்றும் கூட்டுப்பணிகளில் ஆதரவு கிடைக்கும்.','தன்னம்பிக்கையுடன் புதிய முயற்சிகளைத் தொடங்கவும்; நல்ல ஆதரவு கிடைக்கும்.'];
+function getTaraPrediction(birthNk,transitNk){const number=(transitNk-birthNk+27)%27%9+1;return{number,name:TARA_NAMES[number-1],advice:TARA_ADVICE[number-1]}}
+
 const TAMIL_MONTHS=['சித்திரை','வைகாசி','ஆனி','ஆடி','ஆவணி','புரட்டாசி','ஐப்பசி','கார்த்திகை','மார்கழி','தை','மாசி','பங்குனி'];
 const TAMIL_YEARS_60=['பிரபவ','விபவ','சுக்ல','பிரமோதூத','பிரஜோற்பத்தி','ஆங்கீரஸ','ஸ்ரீமுக','பவ','யுவ','தாது','ஈஸ்வர','வெகுதானிய','பிரமாதி','விக்கிரம','விஷு','சித்திரபானு','சுபானு','தாரண','பார்த்திப','விய','சர்வஜித்','சர்வதாரி','விரோதி','விக்ருதி','கர','நந்தன','விஜய','ஜய','மன்மத','துன்முகி','ஹேவிளம்பி','விளம்பி','விகாரி','சார்வரி','பிலவ','சுபகிருது','சோபகிருது','குரோதி','விசுவாவசு','பராபவ','பிலவங்க','கீலக','சௌமிய','சாதாரண','விரோதிகிருது','பரிதாபி','பிரமாதீச','ஆனந்த','ராட்சச','நள','பிங்கள','காளயுக்தி','சித்தார்த்தி','ரௌத்திரி','துன்மதி','துந்துபி','ருத்ரோத்காரி','ரக்தாட்சி','குரோதன','அட்சய'];
 const TITHI_NAMES=['பிரதமை','துவிதியை','திருதியை','சதுர்த்தி','பஞ்சமி','சஷ்டி','சப்தமி','அஷ்டமி','நவமி','தசமி','ஏகாதசி','துவாதசி','திரயோதசி','சதுர்தசி','பௌர்ணமி/அமாவாசை'];
@@ -909,7 +917,8 @@ const PARIGARAM_SOOLAM=['வெல்லம்','தயிர்','பால்'
 const GOVT_HOLIDAYS={'01-01':'New Year','01-14':'பொங்கல்','01-15':'தைப்பொங்கல்','01-16':'மாட்டுப்பொங்கல்','01-26':'குடியரசு தினம்','04-14':'தமிழ்ப்புத்தாண்டு','08-15':'சுதந்திர தினம்','10-02':'காந்தி ஜெயந்தி','12-25':'கிறிஸ்துமஸ்'};
 const FESTIVALS={'01-15':'பொங்கல்','05-01':'மே தினம்','11-01':'தீபாவளி','12-25':'கிறிஸ்துமஸ்','03-08':'மகளிர் தினம்'}; // Simplified for example
 
-const fd=d=>d.toLocaleDateString('en-GB'),sg=x=>Math.floor(x/30),nv=x=>Math.floor(x/(40/3))%12;
+const fd=d=>d.toLocaleDateString('en-GB',{timeZone:'Asia/Kolkata'}),sg=x=>Math.floor(x/30),nv=x=>Math.floor(x/(40/3))%12;
+const istParts=d=>new Date(d.getTime()+330*60000);
 
 // Function to calculate the end time of Tithi/Nakshatra (approx)
 function getTransitionTime(date, type){
@@ -918,36 +927,40 @@ function getTransitionTime(date, type){
   const startVal = type==='tithi' ? n(startPos[1]-startPos[0]) : startPos[1];
   const step = type==='tithi' ? 12 : (40/3);
   const currentSegment = Math.floor(startVal/step);
-  const targetVal = (currentSegment+1)*step;
-  
-  let J_end = J;
+  let J_end = J, J_low=J;
   let loops = 0;
   while(loops < 48){ // max 48 hours
     J_end += 1/24; // +1 hour
     const p = pos(J_end, null).sid;
     const val = type==='tithi' ? n(p[1]-p[0]) : p[1];
     
-    // check if it crossed the target (handle 360 wrap)
-    const diff = type==='tithi' ? n(val - targetVal) : n(val - targetVal);
-    if(diff > 350) { // crossed
+    if(Math.floor(val/step)!==currentSegment) {
       break;
     }
+    J_low=J_end;
     loops++;
   }
+  for(let i=0;i<14;i++){
+    const mid=(J_low+J_end)/2,p=pos(mid,null).sid;
+    const val=type==='tithi'?n(p[1]-p[0]):p[1];
+    if(Math.floor(val/step)===currentSegment)J_low=mid;else J_end=mid;
+  }
   const endDate = new Date((J_end - 2440587.5)*864e5);
-  const h = String(endDate.getHours()).padStart(2,'0');
-  const m = String(endDate.getMinutes()).padStart(2,'0');
+  const ist = istParts(endDate);
+  const h = String(ist.getUTCHours()).padStart(2,'0');
+  const m = String(ist.getUTCMinutes()).padStart(2,'0');
   return `${h}:${m}`;
 }
 
 function getTamilDateDetails(dateObj){
+  const ist=istParts(dateObj);
   const J=dateObj.getTime()/864e5+2440587.5;
   const o=pos(J,null),sunL=o.sid[0],moonL=o.sid[1];
   const sunR=sg(sunL),moonR=sg(moonL);
   const tamilMonth=TAMIL_MONTHS[sunR];
   const tamilDay=Math.max(1,Math.min(32,Math.floor(sunL%30)+1));
-  const yr=dateObj.getFullYear();
-  const isBeforeChithirai=(dateObj.getMonth()<3)||(dateObj.getMonth()===3&&dateObj.getDate()<14);
+  const yr=ist.getUTCFullYear();
+  const isBeforeChithirai=(ist.getUTCMonth()<3)||(ist.getUTCMonth()===3&&ist.getUTCDate()<14);
   const effYr=isBeforeChithirai?yr-1:yr;
   const tamilYearName=TAMIL_YEARS_60[((effYr-1987)%60+60)%60];
   const ayanam=(sunR>=9||sunR<=2)?'உத்தராயணம்':'தட்சிணாயனம்';
@@ -960,7 +973,7 @@ function getTamilDateDetails(dateObj){
   const tithiName=(tithiIdx===14)?'பௌர்ணமி':(tithiIdx===29)?'அமாவாசை':TITHI_NAMES[tithiIdx%15];
   const kIdx=Math.floor(diff/6);
   const karana=kIdx===0?'கிம்ஸ்துக்னம்':kIdx>=57?KARANA_NAMES[kIdx-50]:KARANA_NAMES[(kIdx-1)%7];
-  const wd=dateObj.getDay();
+  const wd=ist.getUTCDay();
   const nkIdx=Math.floor(moonL/(40/3));
   const pada=Math.floor((moonL%(40/3))/(10/3))+1;
   const yogaIdx=Math.floor(n(sunL+moonL)/(40/3))%27;
@@ -970,14 +983,14 @@ function getTamilDateDetails(dateObj){
   const nkEnd = getTransitionTime(dateObj, 'nakshatra');
 
   // Holiday & Festival Logic
-  const dateStr = `${String(dateObj.getMonth()+1).padStart(2,'0')}-${String(dateObj.getDate()).padStart(2,'0')}`;
+  const dateStr = `${String(ist.getUTCMonth()+1).padStart(2,'0')}-${String(ist.getUTCDate()).padStart(2,'0')}`;
   const isGovtHoliday = !!GOVT_HOLIDAYS[dateStr];
   const holidayName = GOVT_HOLIDAYS[dateStr] || FESTIVALS[dateStr] || '';
   const isFestival = !!FESTIVALS[dateStr] || tithiIdx%15===13 || nkIdx===10; // add major festivals
   
   // Bank working day (Sunday = 0, 2nd/4th Sat = 6)
   const isSunday = wd === 0;
-  const is2nd4thSat = wd === 6 && Math.ceil(dateObj.getDate()/7) % 2 === 0;
+  const is2nd4thSat = wd === 6 && Math.ceil(ist.getUTCDate()/7) % 2 === 0;
   const isBankHoliday = isSunday || is2nd4thSat || isGovtHoliday;
 
   return{
@@ -997,26 +1010,28 @@ function panchangam(){return getTamilDateDetails(new Date());}
 function renderCalendarHub(){
   const picker=$('#calDatePicker');
   if(!picker.value){
-    const t=new Date();
-    picker.value=`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+    const t=istParts(new Date());
+    picker.value=`${t.getUTCFullYear()}-${String(t.getUTCMonth()+1).padStart(2,'0')}-${String(t.getUTCDate()).padStart(2,'0')}`;
   }
-  const selDate=new Date(picker.value+'T07:30:00');
+  const selDate=new Date(picker.value+'T07:30:00+05:30');
   const selRasi=parseInt($('#calRasiSelect').value||'0',10);
+  const birthNk=Math.max(0,Math.min(26,parseInt($('#calNakshatraSelect').value||'0',10)));
   const pd=getTamilDateDetails(selDate);
   const dayBhava=(pd.moonR-selRasi+12)%12+1;
+  const personalTara=getTaraPrediction(birthNk,pd.nkIdx);
   const chandrashtamaRasi=RS[(pd.moonR+4)%12];
 
-  const yr=selDate.getFullYear(),mo=selDate.getMonth();
-  const firstDay=new Date(yr,mo,1).getDay();
-  const daysInMonth=new Date(yr,mo+1,0).getDate();
+  const selectedIST=istParts(selDate),yr=selectedIST.getUTCFullYear(),mo=selectedIST.getUTCMonth();
+  const firstDay=new Date(Date.UTC(yr,mo,1)).getUTCDay();
+  const daysInMonth=new Date(Date.UTC(yr,mo+1,0)).getUTCDate();
   let gridHtml=['ஞாயிறு','திங்கள்','செவ்வாய்','புதன்','வியாழன்','வெள்ளி','சனி'].map(w=>`<div class="cal-day-head">${w}</div>`).join('');
   for(let b=0;b<firstDay;b++)gridHtml+=`<div class="cal-cell" style="opacity:.25"></div>`;
 
   const specialDays=[];
   for(let d=1;d<=daysInMonth;d++){
-    const curD=new Date(yr,mo,d,7,30);
+    const curD=new Date(`${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}T07:30:00+05:30`);
     const info=getTamilDateDetails(curD);
-    const isSel=d===selDate.getDate();
+    const isSel=d===selectedIST.getUTCDate();
     let tag='', tagColor='', icon='';
     
     if(info.isGovtHoliday){ tag='🔴 விடுமுறை'; tagColor='color:var(--no);font-weight:bold'; icon='🏦'; }
@@ -1046,14 +1061,14 @@ function renderCalendarHub(){
   }
 
   const yearlyRows=TAMIL_MONTHS.map((tm,idx)=>{
-    const approxMid=new Date(yr,3+idx,1);
+    const approxMid=new Date(Date.UTC(yr,3+idx,15));
     const h=(idx-selRasi+12)%12+1;
     const isGood=[3,6,10,11,1,2,5,9].includes(h);
     const isMuhurtham=![3,5,8].includes(idx);
     return`<tr>
       <td><b>${idx+1}. ${tm}</b></td>
       <td>${RS[idx]} (சூரியன்)</td>
-      <td>${ approxMid.toLocaleDateString('en-GB',{month:'short',year:'numeric'}) }</td>
+      <td>${ approxMid.toLocaleDateString('en-GB',{month:'short',year:'numeric',timeZone:'Asia/Kolkata'}) }</td>
       <td>${isMuhurtham?'<span class="ok">சுப முகூர்த்த மாதம் ✔</span>':'<span class="mid">சூன்ய மாதம்</span>'}</td>
       <td class="${isGood?'ok':'mid'}">${RS[selRasi]} ராசிக்கு ${h}-ம் இடம்: ${DAILY_BHAVA_TXT[h]}</td>
     </tr>`;
@@ -1071,8 +1086,8 @@ function renderCalendarHub(){
           <div style="display:flex;justify-content:space-around;align-items:center">
             <div>
               <small style="font-weight:700;color:#7a5a40">ஆங்கில தேதி</small>
-              <div style="font-size:2.2rem;font-weight:700;color:#2d140b">${pd.date.getDate()}</div>
-              <small>${pd.date.toLocaleDateString('en-GB',{month:'long',year:'numeric'})}</small>
+              <div style="font-size:2.2rem;font-weight:700;color:#2d140b">${istParts(pd.date).getUTCDate()}</div>
+              <small>${pd.date.toLocaleDateString('en-GB',{month:'long',year:'numeric',timeZone:'Asia/Kolkata'})}</small>
             </div>
             <div style="border-left:2px dashed var(--gold);border-right:2px dashed var(--gold);padding:0 22px">
               <small style="font-weight:700;color:var(--red)">${pd.tamilMonth}</small>
@@ -1087,8 +1102,8 @@ function renderCalendarHub(){
           </div>
 
           <table style="margin-top:16px;text-align:left;background:var(--surface);color:var(--ink)">
-            <tr><th>திதி</th><td><b>${pd.tithiName}</b> (${pd.paksha}) <br><small style="color:var(--no)">முடிவு: மாலை ${pd.tithiEnd}</small></td></tr>
-            <tr><th>நட்சத்திரம்</th><td><b>${pd.nakshatra}</b> (பாதம் ${pd.pada}) <br><small style="color:var(--no)">முடிவு: மாலை ${pd.nkEnd}</small></td></tr>
+            <tr><th>திதி</th><td><b>${pd.tithiName}</b> (${pd.paksha}) <br><small style="color:var(--no)">முடிவு: IST ${pd.tithiEnd}</small></td></tr>
+            <tr><th>நட்சத்திரம்</th><td><b>${pd.nakshatra}</b> (பாதம் ${pd.pada}) <br><small style="color:var(--no)">முடிவு: IST ${pd.nkEnd}</small></td></tr>
             <tr><th>நாம யோகம் · கரணம்</th><td>${pd.yoga} · ${pd.karana}</td></tr>
             <tr><th>நல்ல நேரம்</th><td class="ok">${pd.nallaNeram}</td></tr>
             <tr><th>ராகு காலம் · எமகண்டம்</th><td><span class="no">ராகு: ${pd.rahuKalam}</span> · <span class="mid">எம: ${pd.yamaGandam}</span></td></tr>
@@ -1103,7 +1118,9 @@ function renderCalendarHub(){
           <p style="font-size:.92rem;margin:6px 0">இன்று சந்திரன் <b>${pd.moonRasi}</b> ராசியில் (உங்கள் ராசிக்கு <b>${dayBhava}-ம் இடத்தில்</b>) சஞ்சரிக்கிறார்.</p>
           <div class="dmy-card" style="margin-top:10px">
             <b>📌 பலன்:</b> ${DAILY_BHAVA_TXT[dayBhava]}<br><br>
-            <b>⭐ நட்சத்திர பலன் (${pd.nakshatra}):</b> ${NAKSHATRA_PALAN[pd.nkIdx]}
+            <b>⭐ இன்றைய நட்சத்திரம் (${pd.nakshatra}):</b> ${NAKSHATRA_PALAN[pd.nkIdx]}<br><br>
+            <b>🔭 உங்கள் நட்சத்திர பலன் (${NK[birthNk]}):</b> ${NAKSHATRA_PALAN[birthNk]}<br>
+            <b>தாராபலம் · ${personalTara.name}:</b> ${personalTara.advice}
             <div class="luck-pills">
               <span>🎨 நிறம்: ${LUCKY_COLORS[selRasi]}</span>
               <span>🙏 தெய்வம்: ${DEITIES[selRasi]}</span>
@@ -1122,7 +1139,7 @@ function renderCalendarHub(){
       </div>
     </div>
 
-    <h3 class="sec-sub">🗓️ மாதக் காலண்டர் (${selDate.toLocaleDateString('en-GB',{month:'long',year:'numeric'})})</h3>
+    <h3 class="sec-sub">🗓️ மாதக் காலண்டர் (${selDate.toLocaleDateString('en-GB',{month:'long',year:'numeric',timeZone:'Asia/Kolkata'})})</h3>
     <div class="note">🔴 சிவப்பு = விடுமுறை / பண்டிகை | 🟢 பச்சை = சுப முகூர்த்தம் / விரதம்</div>
     <div class="cal-month-grid">${gridHtml}</div>
 
@@ -1251,6 +1268,7 @@ function renderTransitHub(){
 
 $('#calDatePicker').onchange=renderCalendarHub;
 $('#calRasiSelect').onchange=renderCalendarHub;
+$('#calNakshatraSelect').onchange=()=>{localStorage.setItem('iw_daily_nakshatra',$('#calNakshatraSelect').value);renderCalendarHub()};
 $('#transitRasiSelect').onchange=renderTransitHub;
 
 function nadiCheck(p){
@@ -1403,7 +1421,7 @@ function calcDMY(p){
   const trMoonR=sg(tr[1]),trMoonNk=Math.floor(tr[1]/(40/3));
   const dayHouse=(trMoonR-mr+12)%12+1;
   const tara=(trMoonNk-p.nk+27)%9+1,taraGood=[1,2,4,6,8,9].includes(tara);
-  const luckyNum=((mr+now.getDate())%9)+1;
+  const luckyNum=((mr+istParts(now).getUTCDate())%9)+1;
   const sunR=sg(tr[0]),tMonth=TAMIL_MONTHS[sunR],mHouse=(sunR-mr+12)%12+1;
   const venH=(sg(tr[5])-mr+12)%12+1,merH=(sg(tr[3])-mr+12)%12+1;
   const monthGood=[3,6,10,11].includes(mHouse);
@@ -1438,6 +1456,8 @@ function dmyBlock(p,role){
       <div class="dmy-card"><h4>☀️ இன்றைய ராசிபலன்</h4>
         <div style="font-size:.82rem;opacity:.85;margin-bottom:4px">சந்திரன்: <b>${RS[d.trMoonR]} (${NK[d.trMoonNk]})</b> · ${d.dayHouse}-ம் இடம்</div>
         <div style="font-size:.84rem">${d.dailyText}</div>
+        <div style="font-size:.84rem;margin-top:6px"><b>⭐ ${NK[p.nk]} பிறந்த நட்சத்திர பலன்:</b> ${NAKSHATRA_PALAN[p.nk]}</div>
+        <div style="font-size:.8rem;margin-top:6px"><b>தாராபலம் · ${getTaraPrediction(p.nk,d.trMoonNk).name}:</b> ${getTaraPrediction(p.nk,d.trMoonNk).advice}</div>
         <div class="luck-pills"><span>🎯 எண்: ${d.luckyNum}</span><span>🎨 ${d.luckyColor}</span><span class="${d.taraGood?'ok':'mid'}">⭐ ${d.taraGood?'தாராபலம் நன்று ✔':'சமம்'}</span></div>
       </div>
       <div class="dmy-card"><h4>🌙 ${d.tMonth} மாத பலன்</h4>
@@ -1593,6 +1613,8 @@ function goSingle(){
   $('#msg').textContent='';window.AP=0;
   const P=resolvePerson($('#sn0').value,$('#sd0').value,$('#st0').value,$('#sp0').value,'ஜாதகர்');
   if(!P){$('#msg').textContent='தயவுசெய்து பிறந்த தேதி மற்றும் ஊரை உள்ளிடவும்.';return;}
+  $('#calNakshatraSelect').value=String(P.nk);
+  localStorage.setItem('iw_daily_nakshatra',String(P.nk));
   const genderTag=$('#sg0').value||'ஆண் (Male)';
   const dsh=checkDosha(P);
   const panch=panchangam();
