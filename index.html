@@ -226,22 +226,81 @@ button.sec:hover{border-color:var(--gold);background:var(--gold-light)}
 button.ok-btn{background:linear-gradient(135deg,var(--ok) 0%,#0b7a3b 100%);color:#fff;box-shadow:0 4px 15px rgba(14,159,77,.25)}
 
 /* ===== CUTE TAMIL CALENDAR SHEET & GRID ===== */
+#view-calendar > .card{padding:0;border:0;background:transparent;box-shadow:none;overflow:visible}
+#view-calendar > .card > .hd{background:linear-gradient(110deg,#861038,#4d0926);border-color:#efb34d;box-shadow:0 12px 30px rgba(50,4,23,.2)}
+#view-calendar > .card > .hd h2{color:#fff}
+#view-calendar > .card > .hd select{border:1px solid #f0c16a;background:#fff;color:#40202a;font-weight:700}
+#calendarHubContent{padding:22px;border-radius:26px;background:radial-gradient(circle at 8% 5%,rgba(255,190,110,.22),transparent 28%),linear-gradient(145deg,#c12c58 0%,#9b1645 38%,#610d31 100%);box-shadow:0 18px 42px rgba(73,4,30,.22)}
+#calendarHubContent .sec-sub{color:#fff;border-bottom-color:rgba(255,255,255,.28)}
+#calendarHubContent .note{color:#ffe6e8}
 .cal-daily-sheet{
-  max-width:480px;margin:0 auto;border:2px solid var(--border);border-radius:24px;
-  background:linear-gradient(180deg,var(--surface),var(--bg));color:var(--ink);
-  box-shadow:var(--shadow-lg);overflow:hidden;position:relative;
+  grid-column:1/-1;max-width:none;margin:0;border:1px solid rgba(255,255,255,.58);border-radius:28px;
+  background:#fff;color:#35201d;box-shadow:0 22px 48px rgba(43,5,23,.27);overflow:hidden;position:relative;
+  display:grid;grid-template-columns:minmax(230px,27%) minmax(0,1fr);min-height:360px;
+  transform-origin:left center;backface-visibility:hidden;
 }
-.cal-daily-sheet::before{
-  content:"📌";position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:1.8rem;z-index:10;
-  filter:drop-shadow(0 4px 6px rgba(0,0,0,0.2));
+.paper-flip{animation:paperTurnIn .62s cubic-bezier(.2,.75,.22,1) both}
+@keyframes paperTurnIn{0%{opacity:.35;transform:perspective(1400px) rotateY(-8deg) translateY(8px);box-shadow:0 5px 14px rgba(43,5,23,.12)}65%{opacity:1;transform:perspective(1400px) rotateY(1deg) translateY(0)}100%{transform:perspective(1400px) rotateY(0);box-shadow:0 22px 48px rgba(43,5,23,.27)}}
+.cal-daily-sheet::after{content:"";position:absolute;right:0;bottom:0;width:44px;height:44px;background:linear-gradient(135deg,#fff 0 49%,#f1e9df 50% 100%);clip-path:polygon(0 100%,100% 0,100% 100%);filter:drop-shadow(-3px -3px 4px rgba(56,20,30,.14));pointer-events:none}
+.cal-sheet-top::before{content:"";position:absolute;top:0;left:20px;right:20px;height:12px;background:radial-gradient(circle,#d6a239 0 3px,transparent 3.5px) left center/20px 12px repeat-x;opacity:.95}
+.cal-date-label{display:inline-flex;margin-top:28px;padding:4px 12px;border-radius:99px;background:rgba(255,255,255,.16);font-weight:700;font-size:.8rem}
+.cal-day-number{font:700 clamp(5rem,9vw,7.4rem)/.9 'Noto Serif Tamil',serif;letter-spacing:-.06em;margin:22px 0 8px;color:#fff}
+.cal-month-label{font:700 1.25rem 'Noto Serif Tamil',serif;color:#fff}
+.cal-tamil-day{margin-top:8px;color:#d9fff4;font-weight:700}
+.cal-day-desc{margin-top:20px;font-size:.9rem;line-height:1.65;color:#eafff8}
+.cal-main-info{padding:24px 26px 28px;min-width:0;background:#fff}
+.cal-info-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #f3dce0}
+.cal-info-heading h3{margin:0;color:#4e1028;font-size:1.35rem}
+.cal-info-heading small{color:#82616a}
+.cal-live-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:99px;background:#f9eef1;border:1px solid #ead0d7;font-size:.78rem;font-weight:700;color:#5e3440}
+.cal-live-pill::before{content:"";width:8px;height:8px;border-radius:50%;background:#0e9b83;box-shadow:0 0 0 4px rgba(14,155,131,.12)}
+.cal-time-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 14px;margin-bottom:12px;border:1px solid #f4d99e;border-radius:16px;background:#fff5dc;color:#9a5b10}
+.cal-time-row strong{margin-right:4px}
+.cal-time-chip{display:inline-flex;padding:5px 11px;border-radius:99px;background:#fff;border:1px solid #eed8b2;color:#462b24;font-weight:700;font-size:.82rem}
+.cal-time-chip:first-of-type{background:#0b8f7e;border-color:#0b8f7e;color:#fff}
+.cal-fact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.cal-fact{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 13px;border:1px solid #f1d8dc;border-radius:14px;background:#fff;color:#76565a;font-size:.82rem}
+.cal-fact b{color:#bf174a;text-align:right;font-size:.86rem}
+.cal-fact:nth-child(odd){background:#fff8f7}
+.cal-panchang-table{margin:10px 0 0;border:1px solid #f0d9dd;border-radius:16px;overflow:hidden;box-shadow:none}
+.cal-panchang-table th{background:#fff5f6;color:#7c1939;font-size:.8rem}
+.cal-panchang-table td{font-size:.82rem}
+#calendarHubContent .cal-day-head{background:#761233;border:1px solid rgba(255,255,255,.16);color:#fff}
+#calendarHubContent .cal-cell{border-color:#efd3d8;border-radius:14px;min-height:88px}
+#calendarHubContent .cal-cell.today{background:#ffe8ef;border:2px solid #d51c53}
+#calendarHubContent .cal-cell.holiday{background:#fff0ed;border-color:#ee8a8a}
+#calendarHubContent .cal-cell.festival{background:#fff7e5;border-color:#e7bd65}
+#calendarHubContent .cal-cell .tam-d{color:#096e62;background:#e2f5ef}
+#calendarHubContent .ornate-box{border-color:rgba(255,255,255,.5);box-shadow:0 10px 22px rgba(49,5,23,.18)}
+#calendarHubContent .grid > div:not(.cal-daily-sheet){grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+#calendarHubContent .grid > div:not(.cal-daily-sheet) > div:last-child{grid-column:1/-1}
+@media(max-width:800px){
+  #calendarHubContent{padding:12px;border-radius:20px}
+  .cal-daily-sheet{grid-template-columns:1fr}
+  .cal-sheet-top{min-height:265px}
+  .cal-day-number{font-size:5.5rem;margin:12px 0 4px}
+  .cal-day-desc{margin-top:10px;max-width:560px}
+  .cal-main-info{padding:18px}
+  #calendarHubContent .grid > div:not(.cal-daily-sheet){grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  #calendarHubContent .grid > div:not(.cal-daily-sheet) > div:last-child{grid-column:1/-1}
+}
+@media(max-width:520px){
+  .cal-fact-grid{grid-template-columns:1fr}
+  .cal-info-heading h3{font-size:1.12rem}
+  .cal-day-number{font-size:4.8rem}
+  #calendarHubContent .grid > div:not(.cal-daily-sheet){grid-template-columns:1fr}
+  #calendarHubContent .grid > div:not(.cal-daily-sheet) > div:last-child{grid-column:auto}
+}
+@media(prefers-reduced-motion:reduce){
+  .paper-flip{animation:none}
 }
 .cal-sheet-top{
-  background:linear-gradient(135deg,var(--red),var(--red-dark));color:#ffe9b0;
-  padding:18px 16px 14px;text-align:center;border-bottom:3px solid var(--gold);
+  position:relative;overflow:hidden;background:linear-gradient(165deg,#0a8b7b,#075f58);color:#f4fff9;
+  padding:26px 28px 24px;text-align:left;border-right:4px solid #e9b548;
 }
 .cal-big-date{
   font-size:4.5rem;font-family:'Noto Serif Tamil',serif;font-weight:700;
-  color:var(--red);line-height:1;margin:10px 0 4px;
+  color:#fff;line-height:1;margin:10px 0 4px;
 }
 .cal-month-grid{
   display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:16px;
@@ -917,7 +976,7 @@ const PARIGARAM_SOOLAM=['வெல்லம்','தயிர்','பால்'
 const GOVT_HOLIDAYS={'01-01':'New Year','01-14':'பொங்கல்','01-15':'தைப்பொங்கல்','01-16':'மாட்டுப்பொங்கல்','01-26':'குடியரசு தினம்','04-14':'தமிழ்ப்புத்தாண்டு','08-15':'சுதந்திர தினம்','10-02':'காந்தி ஜெயந்தி','12-25':'கிறிஸ்துமஸ்'};
 const FESTIVALS={'01-15':'பொங்கல்','05-01':'மே தினம்','11-01':'தீபாவளி','12-25':'கிறிஸ்துமஸ்','03-08':'மகளிர் தினம்'}; // Simplified for example
 
-const fd=d=>d.toLocaleDateString('en-GB',{timeZone:'Asia/Kolkata'}),sg=x=>Math.floor(x/30),nv=x=>Math.floor(x/(40/3))%12;
+const fd=d=>d.toLocaleDateString('en-GB',{timeZone:'Asia/Kolkata'}),monthYearTa=d=>d.toLocaleDateString('ta-IN',{month:'long',year:'numeric',timeZone:'Asia/Kolkata'}),sg=x=>Math.floor(x/30),nv=x=>Math.floor(x/(40/3))%12;
 const istParts=d=>new Date(d.getTime()+330*60000);
 
 // Function to calculate the end time of Tithi/Nakshatra (approx)
@@ -1076,41 +1135,35 @@ function renderCalendarHub(){
 
   $('#calendarHubContent').innerHTML=`
     <div class="grid" style="align-items:start;margin-bottom:24px">
-      <div class="cal-daily-sheet">
+      <article class="cal-daily-sheet paper-flip" aria-live="polite">
         <div class="cal-sheet-top">
-          <div style="font-size:.82rem;color:#ffe18d;font-weight:700">உ · முருகன் துணை · திருக்கணித பஞ்சாங்கம்</div>
-          <div style="font-size:1.3rem;font-weight:700;font-family:'Noto Serif Tamil',serif;margin-top:4px">${pd.tamilYearName} வருடம் — ${pd.tamilMonth} மாதம்</div>
-          <div style="font-size:.85rem;opacity:.9">${pd.ayanam} · ${pd.ritu} · ${fd(pd.date)}</div>
+          <div style="font-size:.82rem;color:#d5fff2;font-weight:700">உ · முருகன் துணை · திருக்கணித பஞ்சாங்கம்</div>
+          <div class="cal-date-label">${fd(pd.date)===fd(new Date())?'இன்று':'தேர்ந்தெடுத்த நாள்'}</div>
+          <div class="cal-day-number">${istParts(pd.date).getUTCDate()}</div>
+          <div class="cal-month-label">${monthYearTa(pd.date)}</div>
+          <div class="cal-tamil-day">${pd.tamilYearName} · ${pd.tamilMonth} ${pd.tamilDay} · ${pd.weekday}</div>
+          <div class="cal-day-desc"><b>${NK[birthNk]} பிறந்த நட்சத்திரம்</b><br>${NAKSHATRA_PALAN[birthNk]}</div>
         </div>
-        <div style="padding:18px;text-align:center">
-          <div style="display:flex;justify-content:space-around;align-items:center">
-            <div>
-              <small style="font-weight:700;color:#7a5a40">ஆங்கில தேதி</small>
-              <div style="font-size:2.2rem;font-weight:700;color:#2d140b">${istParts(pd.date).getUTCDate()}</div>
-              <small>${pd.date.toLocaleDateString('en-GB',{month:'long',year:'numeric',timeZone:'Asia/Kolkata'})}</small>
-            </div>
-            <div style="border-left:2px dashed var(--gold);border-right:2px dashed var(--gold);padding:0 22px">
-              <small style="font-weight:700;color:var(--red)">${pd.tamilMonth}</small>
-              <div class="cal-big-date">${pd.tamilDay}</div>
-              <span class="badge ok-b" style="font-size:.9rem">${pd.weekday}க் கிழமை</span>
-            </div>
-            <div>
-              <small style="font-weight:700;color:#7a5a40">சந்திர ராசி</small>
-              <div style="font-size:1.25rem;font-weight:700;color:var(--ok);margin-top:6px">${pd.moonRasi}</div>
-              <small>சூரியன்: ${pd.sunRasi}</small>
-            </div>
+        <div class="cal-main-info">
+          <div class="cal-info-heading">
+            <div><h3>இன்றைய பஞ்சாங்கம்</h3><small>${pd.ayanam} · ${pd.ritu} · ${fd(pd.date)}</small></div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span class="cal-live-pill">${pd.nallaNeram}</span><a href="#monthCalendar" style="color:#8b1740;font-weight:700;text-decoration:none">முழு நாளைப் பார்க்க →</a></div>
           </div>
-
-          <table style="margin-top:16px;text-align:left;background:var(--surface);color:var(--ink)">
-            <tr><th>திதி</th><td><b>${pd.tithiName}</b> (${pd.paksha}) <br><small style="color:var(--no)">முடிவு: IST ${pd.tithiEnd}</small></td></tr>
-            <tr><th>நட்சத்திரம்</th><td><b>${pd.nakshatra}</b> (பாதம் ${pd.pada}) <br><small style="color:var(--no)">முடிவு: IST ${pd.nkEnd}</small></td></tr>
-            <tr><th>நாம யோகம் · கரணம்</th><td>${pd.yoga} · ${pd.karana}</td></tr>
-            <tr><th>நல்ல நேரம்</th><td class="ok">${pd.nallaNeram}</td></tr>
-            <tr><th>ராகு காலம் · எமகண்டம்</th><td><span class="no">ராகு: ${pd.rahuKalam}</span> · <span class="mid">எம: ${pd.yamaGandam}</span></td></tr>
-            <tr><th>விடுமுறை / பண்டிகை</th><td>${pd.isGovtHoliday ? '<span class="no">🔴 வங்கி விடுமுறை ('+pd.holidayName+')</span>' : pd.isBankHoliday ? '<span class="mid">🏦 வங்கி வேலை நாள் இல்லை</span>' : '<span class="ok">✅ வங்கி வேலை நாள்</span>'}</td></tr>
+          <div class="cal-time-row"><strong>நல்ல நேரம்</strong>${pd.nallaNeram.split(', ').map(time=>`<span class="cal-time-chip">${time}</span>`).join('')}</div>
+          <div class="cal-fact-grid">
+            <div class="cal-fact"><span>ராகு காலம்</span><b>${pd.rahuKalam}</b></div>
+            <div class="cal-fact"><span>எமகண்டம்</span><b>${pd.yamaGandam}</b></div>
+            <div class="cal-fact"><span>குளிகை</span><b>${pd.kuligai}</b></div>
+            <div class="cal-fact"><span>சூலம் · பரிகாரம்</span><b>${pd.soolam} · ${pd.parigaram}</b></div>
+          </div>
+          <table class="cal-panchang-table">
+            <tr><th>திதி</th><td><b>${pd.tithiName}</b> · ${pd.paksha}<br><small>முடிவு: IST ${pd.tithiEnd}</small></td><th>சந்திர ராசி</th><td><b>${pd.moonRasi}</b></td></tr>
+            <tr><th>நட்சத்திரம்</th><td><b>${pd.nakshatra}</b> · பாதம் ${pd.pada}<br><small>முடிவு: IST ${pd.nkEnd}</small></td><th>சூரிய ராசி</th><td><b>${pd.sunRasi}</b></td></tr>
+            <tr><th>நாம யோகம்</th><td>${pd.yoga}</td><th>கரணம்</th><td>${pd.karana}</td></tr>
+            <tr><th>விடுமுறை / பண்டிகை</th><td colspan="3">${pd.isGovtHoliday ? '<span class="no">🔴 வங்கி விடுமுறை ('+pd.holidayName+')</span>' : pd.isBankHoliday ? '<span class="mid">🏦 வங்கி வேலை நாள் இல்லை</span>' : '<span class="ok">✅ வங்கி வேலை நாள்</span>'}</td></tr>
           </table>
         </div>
-      </div>
+      </article>
 
       <div>
         <div class="ornate-box">
@@ -1139,7 +1192,7 @@ function renderCalendarHub(){
       </div>
     </div>
 
-    <h3 class="sec-sub">🗓️ மாதக் காலண்டர் (${selDate.toLocaleDateString('en-GB',{month:'long',year:'numeric',timeZone:'Asia/Kolkata'})})</h3>
+    <h3 id="monthCalendar" class="sec-sub">🗓️ மாதக் காலண்டர் (${monthYearTa(selDate)})</h3>
     <div class="note">🔴 சிவப்பு = விடுமுறை / பண்டிகை | 🟢 பச்சை = சுப முகூர்த்தம் / விரதம்</div>
     <div class="cal-month-grid">${gridHtml}</div>
 
